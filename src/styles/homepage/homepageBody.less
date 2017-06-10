@@ -1,0 +1,41 @@
+@import '../variables.less';
+@import '../general/layout.less';
+.homePage_body {
+  background: url('../../assets/image/playground_bg.png') repeat top left;
+}
+
+.homePage_playground {
+  margin-bottom: @size-2;
+}
+
+.homePage_CenterPanel {
+  margin-bottom: @size-3;
+}
+
+.homePage_panel {
+  .row;
+  width: 100%;
+  padding: @size-0 @size-0 0 @size-0;
+  background-color: @base-white;
+  margin-top: @size-2;
+  box-shadow: @shadow-dp2;
+  position: relative;
+}
+
+.homePage_panel__center {
+  float: left;
+  width: @panel-center;
+  margin: 0 @panel-margin;
+}
+
+.homePage_panel__side {
+  width: @panel-side;
+  position: relative;
+  float: left;
+}
+
+.homePage_panelHeader {
+  font-size: @size-2;
+  font-weight: 600;
+  margin-bottom: @size-0;
+}

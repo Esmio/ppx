@@ -1,0 +1,32 @@
+@import './variables.less';
+@import './normalize.less';
+@import './homepage/homepageBody.less';
+html {
+	font-family: @font-family;
+}
+
+input {
+	border: 0;
+	outline: none;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+a,
+button {
+	&:disabled {
+		cursor: not-allowed;
+	}
+}
+
+a:hover {
+	color: inherit;
+}
+
+i {
+	font-style: normal;
+}

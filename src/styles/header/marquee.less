@@ -1,0 +1,54 @@
+@import '../variables.less';
+@import '../general/layout.less';
+
+@keyframes marquee {
+    from {transform: translate3d(100%, 0, 0);}
+    to {transform: translate3d(-100%, 0, 0);}
+}
+
+.marquee {
+	width: 100%;
+	height: @header-height;
+	font-size: @size-2;
+}
+
+.marquee_Cs {
+	font-size: inherit;
+	text-align: left;
+}
+
+.marquee {
+	position: relative;
+	font-size: inherit;
+	width: 100%;
+	float: right;
+	margin: 0 @size-2;
+	overflow: hidden;
+}
+
+.marquee_body {
+	top: 0;
+	text-align: center;	
+	left: 0;
+	display: block;
+	position: absolute;
+	width: auto;
+	font-size: inherit;
+	white-space: nowrap;
+	animation-name: marquee;
+	animation-iteration-count: infinite;
+}
+
+.marquee_content {
+	margin-right: @size-3;
+}
+
+.marquee_icon {
+	width: @size-2;
+	display: inline-block;
+	font-size: @size-4;
+	margin-left: @size-2;
+	background-size: 100%;
+	background-position: center center;
+	background-repeat: no-repeat;
+}

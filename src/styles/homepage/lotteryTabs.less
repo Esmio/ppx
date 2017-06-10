@@ -1,0 +1,182 @@
+@import '../variables.less';
+@import './homepageBody.less';
+
+.lottery_body {
+  .homePage_panel;
+	padding: 0;
+  float: none;
+}
+
+.lotteryTab_bar {
+  background-color: @base-white
+}
+
+.lotteryTab_barBtn {
+  padding: @size-4;
+  text-align: center;
+  width: 100%;
+  font-size: @size-2;
+  font-weight: 600
+}
+
+.lotteryTab_bar__active {
+  background-color: @accent-cinnabar;
+  color: @base-white
+}
+
+.lotteryTab_contents {
+  // margin-top: @size-0;
+  padding: @size-0;
+}
+
+.lotteryTab_contentsRow {
+  padding: @size-0 0;
+}
+
+.lotteryTab_contentsThumbnail {
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+
+.lotteryTab_contentsDate {
+  font-weight: 600;
+  font-size: @size-2;
+  margin: @size-2 0
+}
+
+.lotteryTab_contentsText {
+  font-size: @size-2;
+  font-weight: 500;
+  margin: @size-0 0;
+}
+
+.lotteryTab_contentsBtns__withIcon {
+  text-align: right;
+  padding: @size-2 0
+}
+
+.lotteryTab_contentsInfo {
+  margin-left: @size-3
+}
+
+.lotteryTab_contentsBtn__withIcon {
+  margin: 0 auto;
+  font-size: @size-2;
+  margin-left: @size-1;
+  padding-left: @size-4;
+  background-repeat: no-repeat;
+  background-size: auto;
+  background-position: center left
+}
+
+.lotteryTab_contentsBtns__buyIn {
+  text-align: right
+}
+
+.lotteryTab_contentsBtn__buyIn {
+  background-image: linear-gradient(to top, #ffd411 0%, #ffffff 100%);
+  background-color: #ffd411;
+  color: @accent-cinnabar;
+  font-size: @size-4;
+  height: 40px;
+  border-radius: 20px;
+  border: 1px solid @accent-cinnabar;
+  padding: 0 @size-3;
+  font-weight: 700
+}
+
+.lotteryTab_contentsBtns__refresh {
+  text-align: right
+}
+
+.lotteryTab_contentsNumbers {
+  padding: @size-1 @size-2 0 @size-1;
+  border: 1px solid @border;
+  border-radius: 50px;
+}
+
+.lotteryTab_contentsNumber {
+  display: inline-block;
+  text-align: center;
+  font-size: @size-3;
+  font-weight: 600;
+  line-height: 40px;
+  width: 40px;
+  height: 40px;
+  background-image: linear-gradient( 145deg, @light-orange 0%, @accent-orange 30%, #ff0844 60%, @accent-cinnabar 100%);
+  background-color: @accent-cinnabar;
+  color: @base-white;
+  margin: 0 @size-1 @size-1 0;
+  border-radius: 20px
+}
+
+.lotteryTab_contentsInput {
+  display: inline-block;
+  font-size: @size-3;
+  line-height: @button-height;
+  height: @button-height;
+  width: 80px;
+  text-align: center;
+  margin: 0 2px;
+  border: 1px solid @border;
+  min-width: 50px
+}
+
+.lotteryTab_contentsPrice {
+  height: @button-height;
+  line-height: @button-height;
+  font-size: @size-3;
+  margin-left: @size-1
+}
+
+.lotteryTab_contentsPriceContent {
+  color: @accent-cinnabar;
+  font-weight: 600;
+  margin: 0 @size-0
+}
+
+.multiplyToggleButton {
+  width: buttonHeight;
+  height: buttonHeight;
+  text-align: center;
+  display: inline-block;
+  font-size: @size-3;
+  line-height: 1;
+  padding: 0;
+  color: @text-gray;
+  border: 1px solid @border;
+}
+
+.lotteryTab_contentsBtn__refresh {
+  padding: 0 @size-3;
+  height: 30px
+}
+
+.lotteryTab_contentsIcon__refresh {
+  font-size: @size-3;
+  margin-right: @size-0;
+}
+
+.lotteryTab_contentsBtn__plusMinus {
+  vertical-align: middle;
+}
+
+.lotteryTab_contentsBtn__checkBox {
+  .lotteryTab_contentsBtn__withIcon;
+  background-image: url('../../assets/icon/icon_choice.png');
+}
+.lotteryTab_contentsBtn__chart {
+  .lotteryTab_contentsBtn__withIcon;
+  background-image: url('../../assets/icon/icon_chart.png');
+}
+.lotteryTab_contentsBtn__plus {
+  .lotteryTab_contentsBtn__plusMinus;
+}
+.lotteryTab_contentsBtn__minus {
+  .lotteryTab_contentsBtn__plusMinus;
+  background-color: @bg-gray;
+}

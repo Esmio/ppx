@@ -1,0 +1,207 @@
+@import '../variables.less';
+@import '../header/login.less';
+@import '../general/layout.less';
+
+.playground {
+  .row;
+}
+.playground_logo {
+  padding: @size-0;
+  border-bottom: 1px dashed @border;
+}
+
+.playground_sidenav {
+  .column;
+  position: fixed;
+  overflow: hidden;
+  height: 100%;
+  z-index: 99;
+  border-right: 1px solid @border;
+  width: @nav-side-width;
+}
+
+.playground_sidenavBody {
+  width: 100%;
+}
+
+.playground_logoImg {
+  max-width: 100%;
+  display: block;
+}
+
+.playground_login {
+  padding: @size-0;
+  border-bottom: 1px solid @border;
+  .login_body {
+    margin-top: 0;
+  }
+}
+.playground_header {
+  padding: @size-3;
+}
+.playground_body {
+  .column;
+  width: 100%;
+  padding-left: @nav-side-width;
+  z-index: -99;
+}
+.playground_headerGameInfos {
+  .column;
+  width: 40%;
+}
+.playground_headerGameName {
+  font-size: @size-4;
+  font-weight: bold;
+}
+
+.playground_headerThumbImg {
+  .column;
+  width: auto;
+  float: left;
+  margin-right: @size-3;
+}
+.playground_headerInfos {
+  .column;
+  width: 60%;
+}
+.playground_gameResult {
+  .column;
+  width: 60%;
+}
+
+.playground_headerPhase {
+  font-size: @size-3;
+  margin-bottom: @size-0;
+}
+.playground_headerPhase__grayOut {
+  .playground_headerPhase;
+  font-size: @size-2;
+  color: @text-gray;
+}
+
+.playground_headerIcon {
+  vertical-align: baseline;
+  font-size: @size-1;
+  margin-left: 4px;
+}
+
+@keyframes rollIn {
+  from {
+    transform: translate3d(100%, 0, 0) rotate(360deg);
+    opacity: 0;
+  }
+  to {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+.playground_openNumber {
+  float: left;
+  border: 1px solid @label-blue;
+  border-radius: 50%;
+  line-height: 33px;
+  height: 35px;
+  width: 35px;
+  opacity: 0;
+  animation-name: rollIn;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in-out;
+  & ~ & {
+    margin-left: @size-0;
+  }
+}
+
+.playground_openNumbers {
+  font-size: @size-4;
+  color: @label-blue;
+  text-align: center;
+}
+.playground_headerThumb{
+  .column;
+  position: relative;
+}
+
+@circle-size: @size-9 + 0.5rem;
+.playground_countdown {
+  position: absolute;
+  height: @circle-size;
+  width: @circle-size;
+  background-color: @bg-gray;
+  border-radius: 50%;
+  transform: translate3d(-0.25rem, -0.25rem, 0);
+}
+.playground_countdownCircle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+  border-radius: 50%;
+  height: @circle-size;
+  width: @circle-size;
+}
+.playground_countdownMask, .playground_countdownFill {
+  width:    @circle-size;
+  height:   @circle-size;
+  position: absolute;
+  border-radius: 50%;
+  z-index: 1;
+  transition-property: transform;
+  transition-timing-function: ease;
+
+  // animation-fill-mode: forwards;
+  backface-visibility: hidden;
+}
+.playground_countdownMask {
+  clip: rect(0, @circle-size, @circle-size, @circle-size/2);
+}
+.playground_countdownFill {
+  clip: rect(0, @circle-size/2, @circle-size, 0);
+}
+.playground_countdownFill__fix {
+  z-index: 0;
+}
+.playground_countDownSpan {
+  font-family: @font-family-courier;
+  font-weight: bold;
+  color: @accent-cinnabar;
+  font-size: @size-4;
+}
+.playgroundModal {
+  & > div {
+    top: 50%;
+    transform: translate3d(0, -50%, 0);
+  }
+}
+.playground_notificationBtn {
+  background-color: darken(@accent-cinnabar, 15%);
+  padding: @size-0 /2 @size-3;
+  border-radius: 6px;
+  color: @base-white;
+  overflow: hidden;
+  position: relative;
+
+  i,
+  span {
+    position: relative;
+    z-index: 2;
+    vertical-align: middle;
+  }
+  i {
+    font-size: @size-4;
+    margin-right: @size-0;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background-color: @accent-cinnabar;
+    top: 50%;
+    right: 100%;
+    pointer-events: none;
+    animation: notificationCountdown 9s ease;
+    z-index: 0;
+  }
+}

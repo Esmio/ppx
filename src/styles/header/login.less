@@ -1,0 +1,105 @@
+@import '../variables.less';
+@import '../User/profile.less';
+@import '../general/layout.less';
+
+.login_body {
+  .row;
+  position: relative;
+  text-align: right;
+}
+.login_input {
+  margin-right: @size-0;
+  font-size: @size-1;
+}
+.login_button {
+  margin-right: @size-0;
+  float: right;
+}
+.login_icon__input {
+  font-style: @size-4;
+  vertical-align: sub;
+  color: @accent-orange;
+}
+.login_icon__success {
+  font-size: @size-2;
+  vertical-align: middle;
+  margin-left: @size-0;
+  color: @accent-teal
+}
+.login_CTABtns {
+  .column;
+  float: right;
+}
+.login_CTABtn {
+  margin-left: @size-0;
+  min-width: @size-6 * 3;
+}
+.login_buttons {
+  float: right;
+  padding: @size-0 0;
+}
+.logout_button {
+  font-size: inherit;
+  float: right;
+}
+.textWrapper {
+  margin: 0 @size-1;
+  min-width: 100px;
+  float: right
+}
+.login_userInfo {
+  width: 100%;
+  position: relative;
+
+
+  margin-right: @size-3;
+}
+.login_userInfoContent {
+  .column;
+  float: none;
+  margin: 0 auto;
+  position: relative;
+
+  .profile_contentBody {
+    margin: 0;
+    padding: 0;
+
+  }
+  .profile_accountProfileInfo,
+  .profile_accountUserProfile {
+    vertical-align: middle;
+    margin: 0 @size-3 0 0;
+  }
+}
+.login_dropDown {
+  .column;
+  float: right;
+  position: relative;
+  margin-right: @size-3;
+}
+.login_userProfilePic {
+  float: right;
+}
+.login_profileTriggerBtn {
+  height: @button-height;
+  line-height: 1;
+  font-size: @size-3;
+  padding-right: @size-0;
+  position: relative;
+  span {
+    margin-right: @size-0;
+    vertical-align: middle;
+  }
+}
+.login_userProfileLinkIcon {
+  font-size: @size-3;
+  position: absolute;
+  top: 50%;
+  right: @size-1;
+  transform: translate3d(0, -50%, 0);
+}
+.login_balance {
+  color: @text-gray;
+  font-size: @size-1;
+  padding-right: @size-3;
+}

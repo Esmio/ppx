@@ -1,0 +1,91 @@
+@import '../variables.less';
+
+.navigation {
+  background-image: url('../../assets/image/navigation_bg.png');
+  background-position: top left;
+  background-repeat: repeat-x;
+  background-size: auto 100%
+}
+.navigation_body {
+  position: relative;
+  font-size: @size-3;
+  color: @base-white;
+}
+.navigation_list {
+  position: relative;
+  float: left;
+  z-index: 3;
+}
+.navigation_listItem {
+  width: @nav-main-width / 6;
+  text-align: center;
+  float: left;
+}
+.navigation_button {
+  width: 100%;
+  padding: @size-0 0;
+}
+.navigation_sideNavParent {
+  float: left;
+  position: relative;
+  z-index: 1
+}
+
+.navigation_hoverBg {
+  content: '';
+  z-index: 2;
+  left: 0;
+  position: absolute;
+  height: 100%;
+  width: @nav-main-width / 6;
+  background-color: @accent-cinnabar;
+  transform: skewX(-40deg) scaleX(1.25);
+  transition: left;
+  transition-timing-function: @transition-timing;
+}
+.navigation_sidenav {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  width: 100%;
+  box-shadow: @shadow-dp4;
+  text-align: initial;
+  max-height: 0px;
+  overflow: hidden;
+
+  transition-property: max-height;
+  transition-duration: 0.25s;
+  transition-timing-function: @transition-timing;
+}
+
+.navigation_sideNavParent__showSideNav {
+  .navigation_sideNavParent;
+  .navigation_sidenav {
+    max-height: 500px;
+  }
+}
+.navigation_sideNavToggleBtn {
+  padding: @size-0 0;
+  width: @nav-side-width;
+  text-align: center;
+  background-color: @accent-cinnabar;
+
+  &:disabled {
+    cursor: initial;
+    pointer-events: none;
+  }
+}
+.navigation_sideNavToggleIcon {
+  font-size: @size-2;
+  position: absolute;
+  top: 50%;
+  margin-left: @size-0;
+  transform: translate3d(50%, -50%, 0);
+  transition-property: transform;
+  transition-duration: 0.15s;
+  transition-timing-function: @transition-timing;
+}
+.navigation_sideNavToggleIcon__reverse {
+  .navigation_sideNavToggleIcon;
+  transform: translate3d(50%, -50%, 0) rotate(180deg);
+}

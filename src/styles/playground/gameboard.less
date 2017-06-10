@@ -1,0 +1,841 @@
+@import '../variables.less';
+@import "../general/rangeInput.less";
+@import '../general/layout.less';
+
+.gameboard {
+  background-color: @bg-gray;
+  padding-bottom: @size-3;
+  padding-top: @size-6;
+  position: relative;
+}
+
+.gameboard_header {
+  background-color: #434a64;
+  background-position: left center;
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+  color: @base-white;
+  font-size: @size-2;
+  left: 0;
+  min-height: 1px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: absolute;
+  top: 0;
+  transform-origin: right top;
+  transform: rotate(-90deg) translateY(-@size-6);
+  width: @size-6;
+}
+
+.gameboard_navButton {
+  display: block;
+  float: left;
+  height: @size-6;
+  line-height: @size-6;
+  margin-bottom: 50px;
+  padding-left: @size-0;
+  padding-right: @size-0;
+  position: relative;
+  text-align: center;
+  transform-origin: 0px 0px;
+  transform: rotate(90deg) translateY(-100%);
+  width: 80px;
+
+  &::after {
+    background-color: @light-orange;
+    bottom: 0;
+    content: '';
+    height: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    transition: height 0.25s @transition-timing;
+    width: 100%;
+  }
+  
+  &:hover {
+    color: @light-orange;
+    &::after {
+      height: 2px;
+    }
+  }
+
+  &:first-child {
+    margin-top: @size-0;
+  }
+
+  &:disabeld {
+    cursor: normal;
+  }
+}
+
+.gameboard_navButton__active {
+  .gameboard_navButton;
+  color: @light-orange;
+
+  &::after {
+    height: 2px;
+  }
+}
+
+.gameboard_subGroups {
+  margin-left: @size-0;
+}
+
+.gameboard_subButtons{
+  margin-top: @size-0;
+}
+
+.gameboard_subButton {
+  background-color: darken(@bg-gray, 5%);
+  border-radius: @border-radius;
+  color: @text-gray;
+  float: left;
+  font-size: @size-2;
+  height: @size-6;
+  margin-right: @size-0;
+  padding: 0 @size-1;
+  text-align: center;
+
+  &:hover {
+    color: @light-orange;
+    background-color: @playground-gray;
+  }
+}
+
+.gameboard_subButton__active {
+  .gameboard_subButton;
+  color: @light-orange;
+  background-color: @playground-gray;
+}
+
+.gameboard_subGroupLabel {
+  color: @text-gray;
+  font-size: @size-2;
+  line-height: @size-6;
+  margin-top: @size-0;
+}
+
+.gameboard_body {
+  background-color: @base-white;
+  border-radius: 6px;
+  box-shadow: @shadow-dp8;
+  margin: @size-3 auto;
+  padding: @size-0;
+  width: @page-width;
+}
+.gameboard_bodyBtnGroup {
+  background-color: @bg-gray;
+  border-radius: 4px;
+  padding: @size-3 @size-0 (@size-3 - @size-0) @size-0;
+  box-shadow: @insetShadow-dp2;
+}
+
+.gameboard_subGroupIcon {
+  font-size: 150%;
+  margin: 0 @size-0;
+  vertical-align: sub;
+}
+
+.gamboard_btnsRow, .gameboard_btnsGroup {
+  .clearfix;
+  margin-bottom: @size-0;
+  position: relative;
+
+  .hasBtnAmount {
+    margin-bottom: ((@size-0 * 3) + @size-1);
+  }
+}
+.gameboard_btnsGroup {
+  .row;
+  background-color: @base-white;
+  border-radius: @size-0;
+  box-shadow: @shadow-dp3;
+  margin-left: @size-7;
+  padding: @size-0 0 0 @size-0;
+  p {
+    color: inherit;
+  }
+  .gamboard_bodyBtnContent,
+  .gamboard_bodyBtnContent__active {
+    animation: none;
+    background-color: inherit;
+    box-shadow: none;
+    color: inherit;
+  }
+
+  .gameboard_btnsLabel {
+    transform: translate3d(-100%, -50%, 0);
+  }
+}
+.gameboard_btnsGroup__active {
+  .gameboard_btnsGroup;
+  color: @light-orange;
+  background-color: @playground-gray;
+}
+
+.gameboard_btnColumn {
+  float: right;
+  margin-left: @size-7 + @size-4;
+}
+
+.gameboard_btnsLabel {
+  position: absolute;
+  top: 50%;
+  transform: translate3d(0, -50%, 0);
+}
+.gameboard_btnsLabelParagraph {
+  font-size: @size-1;
+  line-height: @size-6;
+  margin-right: @size-0;
+  position:relative;
+}
+.gameboard_btnsLabelSpan {
+  background-color: @playground-gray;
+  color: @bg-gray;
+  display: inline-block;
+  line-height: initial;
+  min-width: @size-7 + 0.25rem;
+  padding: @size-0 / 2 @size-0;
+  position: relative;
+  z-index: 2;
+
+  &::before {
+    background-color: inherit;
+    content: '';
+    height: @size-3;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translate3d(50%, -50%, 0) rotate(45deg);
+    width: @size-3;
+    z-index: 0;
+  }
+}
+.gameboard_labelAmount {
+  color: darken(@accent-cinnabar, 10%);
+  left: @size-0;
+  padding-top: @size-0 / 2;
+  position: absolute;
+  top: 100%;
+  transform: translate3d(0, 0, 0);
+}
+.gameboard_btnsLabel__group {
+  .gameboard_btnsLabel;
+}
+.gamboard_bodyBtn {
+  position: relative;
+}
+.gamboard_bodyBtnContent {
+  background-color: @base-white;
+  border-radius: @size-6 / 2;
+  box-shadow: @shadow-dp2;
+  color: @playground-gray;
+  cursor: pointer;
+  float: left;
+  line-height: @size-6;
+  margin-bottom: @size-0;
+  margin-right: @size-0;
+  min-width: @size-6;
+  padding: 0 @size-0;
+  position: relative;
+  text-align: center;
+  transition-duration: 0.15s;
+  transition-property: color, background-color, box-shadow;
+  transition-timing-function: @transition-timing;
+  user-select: none;
+  
+
+  &:hover {
+    box-shadow: none;
+  }
+
+  .hasBtnAmount {
+    margin-bottom: ((@size-0 * 3) + @size-1);
+  }
+}
+.gamboard_controllerBtnsColumn {
+  padding-left: @size-3;
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate3d(0, -50%, 0);
+}
+
+.gameboard_controllerBtn {
+  .gamboard_bodyBtnContent;
+  font-weight: normal;
+  background-color: @playground-gray;
+  color: @bg-gray;
+  font-size: @size-2;
+
+  &:disabled {
+    background-color: darken(@bg-gray, 5%);
+    color: darken(@bg-gray, 15%);
+    box-shadow: none;
+  }
+}
+.gameboard_controllerBtn__active {
+  .gameboard_controllerBtn;
+  color: @light-orange;
+}
+
+
+.gameboard_bodyBtnAmount {
+  bottom: 0;
+  color: darken(@accent-cinnabar, 10%);
+  font-size: @size-1;
+  left: 50%;
+  line-height: 1;
+  padding-top: @size-0;
+  position: absolute;
+  transform: translate3d(-50%, 100%, 0);
+}
+
+.gamboard_bodyBtnContent__active {
+  .gamboard_bodyBtnContent;
+  background-color: @accent-cinnabar;
+  color: @base-white;
+}
+
+.gameboard_cart {
+  padding-top: @size-3;
+}
+.gameboard_cartHeader,
+.gameboard_cartGameRow,
+.gameboard_cartSectionRow {
+  position: relative;
+
+  &:empty {
+    display: none;
+  }
+}
+.gameboard_cartColumn {
+  display: table-cell;
+  padding: @size-0 / 2 @size-0;
+  position: relative;
+  vertical-align: middle;
+  text-align: right;
+
+  &:nth-child(2),
+  &:nth-child(1) {
+    text-align: left;
+  }
+}
+.gameboard_cartPicksColumn {
+  .gameboard_cartColumn;
+  padding-bottom: 0;
+}
+.gameboard_cartHeader {
+  color: @text-gray;
+  font-size: @size-1;
+  padding-bottom: 0;
+}
+@keyframes floatIn {
+  from { transform: translate3d(0, 10%, 0); opacity: 0.5 }
+  to { transform: translate3d(0, 0, 0); opacity: 1 }
+}
+.gameboard_cartBody {
+  background-color: @playground-gray;
+  border-radius: 6px;
+  display: table;
+  margin-bottom: @size-0 / 2;
+  overflow: hidden;
+  width: 100%;
+  
+  animation-name: floatIn;
+  animation-duration: 0.15s;
+  animation-timing-function: @transition-timing;
+  animation-fill-mode: forwards;
+}
+
+.gameboard_cartGameRow {
+  box-shadow: @insetShadow-dp4;
+  color: @base-white;
+  display: table-row;
+  font-size: @size-1;
+  padding-bottom: 0;
+  width: 100%;
+
+  a {
+    color: inherit;
+  }
+}
+.gameboard_cartGameRow__active {
+  .gameboard_cartGameRow;
+  color: @light-orange;
+}
+.gameboard_cartSectionRow {
+  font-weight: 500;
+  background-color: darken(@playground-gray,  10%);
+  border-radius: 6px;
+  box-shadow: @insetShadow-dp4;
+  color: @light-orange;
+  float: left;
+  margin-bottom: @size-0 / 2;
+  margin-right: @size-0;
+  padding: @size-0 / 2 @size-0;
+  word-break: break-word;
+}
+.gamebaord_cartConfirm {
+  text-align: center;
+  margin-bottom: @size-3;
+}
+
+.gamebaord_cartConfirmBtnContent {
+  opacity: 1;
+  width: 100%;
+  height: 100%;
+  color: inherit;
+  position: relative;
+  transition-duration: @duration;
+  transition-property: opacity;
+  transition-timing-function: @transition-timing;
+  padding-left: @size-5 + @size-0;
+}
+.gameboard_cartConfirmIcon {
+  color: inherit;
+  font-size: @size-5;
+  margin-right: @size-0;
+  vertical-align: base-line;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translate3d(0, -50%, 0);
+
+  &[data-count]&:not([data-count="0"]) {
+    &::after {
+      color: @base-white;
+      font: normal normal @size-1 sans-serif;
+      content: attr(data-count);
+      position: absolute;
+      min-width: @size-2;
+      line-height: @size-2;
+      padding: 0 @size-0 /2;
+      background-color: @accent-cinnabar;
+      left: 100%;
+      border-radius: @size-2 / 2;
+      transform: translate3d(-75%, -20%, 0);
+    }
+  }
+}
+.gameboard_cartConfirmBtn {
+  color: @accent-teal;
+  font-size: @size-3;
+  border-radius: 12px;
+  overflow: hidden;
+  font-weight: bold;
+  height: @confirmBtnSize;
+  margin: 0 auto;
+  max-width: 100%;
+  padding: 0 @size-3;
+  position: relative;  
+  text-align: center;
+  transition-duration: @duration;
+  transition-property: max-width, padding, color;
+  transition-timing-function: @transition-timing;
+
+  &::before,
+  &::after {
+    background-color: transparent;
+    border: 2px solid @accent-teal;
+    content: '';
+    height: 100%;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform-origin: 0 0;
+    transition-delay: 0;
+    transition-duration: @durationx2;
+    transition-property: border-radius;
+    transition-timing-function: @transition-timing;
+    width: 50%;
+  }
+  &::before {
+    border-radius: 12px 0 0 12px;
+    border-right: 0;
+    transform: translate3d(-100%, -50%, 0);    
+  }
+  &::after {
+    border-left: 0;
+    border-radius: 0 12px 12px 0;
+    transform: translate3d(0, -50%, 0);    
+  }
+  &:disabled {
+    pointer-events: none;
+  }
+  .gamebaord_cartConfirmBtnContent {
+    transition-duration: @duration;
+    transition-delay: 0;
+  }
+}
+
+.gameboard_cartConfirmBtn__isLoading {
+  .gameboard_cartConfirmBtn;
+  color: @bg-gray;
+  max-width: @confirmBtnSize;
+  padding: 0 0;
+  transform: translateZ(0);
+  transition-delay: @duration;
+
+  &::before,
+  &::after {
+    transition-delay: @duration;
+  }
+  &::before {
+    animation: loadingSpinBefore unit(@spinDurationTime, s) infinite ease @durationx4;
+    border-radius: @confirmBtnSize 0 0 @confirmBtnSize;
+    height: @confirmBtnSize;
+    transform: @transformBefore;
+  }
+  &::after {
+    animation: loadingSpinAfter unit(@spinDurationTime, s) infinite ease @durationx2;
+    border-radius: 0 @confirmBtnSize @confirmBtnSize 0;
+    height: @confirmBtnSize;
+    transform: @transformAfter;
+  }
+  .gamebaord_cartConfirmBtnContent {
+    opacity: 0;
+    transition-delay: 0;
+  }
+}
+.gamebaord_cartConfirmBtn__empty {
+  .gameboard_cartConfirmBtn;
+  pointer-events: none;
+  color: @border;
+
+  &::before,
+  &::after {
+    border-color: @border;
+  }
+}
+.gameboard_cartConfirmBtn__success,
+.gameboard_cartConfirmBtn__error {
+  .gameboard_cartConfirmBtn;
+  color: @bg-gray;
+  max-width: 100%;
+  transition-delay: 0;
+  transition-duration: @durationx2;
+  
+  &::before,
+  &::after {
+    transition-delay: 0;
+    transition-duration: @durationx2;
+  }
+  .gamebaord_cartConfirmBtnContent {
+    transition-delay: @duration;
+  }
+  .gameboard_cartConfirmIcon {
+    transform: translate3d(0, 100%, 0);
+    animation: iconPopUp @duration 1 @bounchBack-timing @durationx2;
+    animation-fill-mode: forwards;
+  }
+  .gameboard_cartConfirmIcon {
+    &::after {
+      display: none;
+    }
+  }
+}
+.gameboard_cartConfirmBtn__success {
+  background-color: @accent-teal;
+  &::before,
+  &::after {
+    border-color: @accent-teal;
+  }
+}
+.gameboard_cartConfirmBtn__error{
+  background-color: @accent-cinnabar;
+  &::before,
+  &::after {
+    border-color: @accent-cinnabar;
+  }
+}
+.gameboard_btnsOpenOptions {
+  margin-top: @size-3;
+  font-weight: 400;
+}
+.gameboard_btnOpenOptions {
+  background-color: darken(@bg-gray, 5%);
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 0px @accent-teal;
+  color: @text-gray;
+  font-size: @size-2;
+  margin-right: @size-2;
+  padding: @size-0 @size-1;
+  transition: box-shadow 0.15s @transition-timing;
+}
+.gameboard_btnOpenOptions__active {
+  .gameboard_btnOpenOptions;
+  box-shadow: inset 0 0 0 2px @accent-teal;
+  color: @accent-teal;
+  background-color: @bg-gray;
+
+  .gameboard_iconOpenOptions {
+    background-color: @accent-teal;
+  }
+}
+.gameboard_iconOpenOptions {
+  background-color: @bg-gray;
+  border-radius: 50%;
+  color: darken(@bg-gray, 5%);
+  float: left;
+  font-size: @size-3;
+  height: @size-4;
+  line-height: 1;
+  margin-right: @size-0;
+  position: relative;
+  transition: background-color 0.15s @transition-timing;
+  width: @size-4;
+
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate3d(-50%, -50%, 0);
+  }
+}
+
+.gameboard_calRow {
+  background-color: @base-white;
+  border-radius: @size-7;
+  box-shadow: @shadow-dp4;
+  color: @playground-gray;
+  font-size: @size-2;
+  overflow: hidden;
+  padding: @size-0;
+  position: relative;
+}
+
+.gameboard_calAmountIcon {
+  line-height: 1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate3d(-50%, -50%, 0);
+}
+
+.gameboard_randomBtn {
+  background-color: darken(@bg-gray, 5%);
+  border-bottom-left-radius: @calRowBtnWith / 2;
+  border-right: @size-5 solid darken(@bg-gray, 5%);
+  border-top-left-radius: @calRowBtnWith / 2;
+  color: @playground-gray;
+  font-size: @size-1;  
+  height: 100%;
+  min-width: @calRowBtnWith;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: @secondBtnPosition;
+  transition-duration: 0.15s;
+  transition-property: color, background-color, transform;
+  transition-timing-function: @transition-timing;
+  
+  i {
+    color: inherit;
+    font-size: 150%;
+    line-height: 1;
+    margin-right: @size-0 / 2;
+    vertical-align: text-bottom;
+  }
+}
+.gameboard_randomBtn__pushed {
+  .gameboard_randomBtn;
+  transform: @thirdBtnPosition;
+}
+.gameboard_multiplyBtn {
+  .gameboard_randomBtn;
+  color: @base-white;
+  transform: @firstBtnPosition;
+  border-right: @size-3 solid @light-orange;
+  background-color: @light-orange;
+  i {
+    vertical-align: middle;
+  }
+}
+.gameboard_multiplyBtn__pushed {
+  .gameboard_multiplyBtn;
+  transform: @secondBtnPosition;
+}
+.gameboard_addBtn {
+  .gameboard_randomBtn;
+  color: @base-white;
+  font-size: @size-2;
+  transform: translate3d(@calRowBtnWith, 0, 0);
+  border-right: 0;
+  background-color: @accent-teal;
+  i {
+    vertical-align: middle;
+  }
+}
+.gameboard_addBtn__pushed {
+  .gameboard_addBtn;
+  transform: @firstBtnPosition;
+}
+.gameboard_clearBtn {
+  .gameboard_randomBtn;
+  background-color: transparent;
+  border-color: transparent;
+  color: lighten(@accent-cinnabar, 10%);
+  transform: @thirdBtnPosition;
+  i {
+    vertical-align: middle;
+    color: inherit;
+  }
+}
+.gameboard_clearBtn__pushed {
+  .gameboard_clearBtn;
+  transform: @lastBtnPosition;
+}
+.gameboard_clearBtn__hide {
+  .gameboard_clearBtn;
+  transform: @secondBtnPosition;
+}
+.gameboard_calBtnsText {
+  vertical-align: middle;
+  position: relative;
+}
+.gameboard_calCountBubble {
+  background-color: @accent-cinnabar;
+  border-radius: 50%;
+  font-size: @size-1;
+  height: @size-3;
+  left: 0;
+  line-height: @size-3;
+  min-width: @size-3;
+  position: absolute;
+  text-align: center;
+  top: @size-1;
+  z-index: 1;
+}
+.gameboard_calReturnRatio {
+  display: inline-block;
+  margin-right: @size-0;
+  background-color: @playground-gray;
+  color: @bg-gray;
+  padding: 0 @size-0;
+  border-radius: @size-7;
+}
+.gameboard_calRange {
+  position: relative;
+  vertical-align: middle;
+  display: inline-block;
+  width: 100px;
+  margin: 0 @size-0;
+}
+.gameboard_rangeInput {
+  vertical-align: middle;
+}
+.inputHighlight {
+  content: '';
+  position: absolute;
+  background-color: @light-orange;
+  height: 2px;
+  top: 50%;
+  left: 0;
+  transform: translate3d(0, -50%, 0);
+  pointer-events:none;
+}
+.gameboard_cartClearAllIcon {
+  font-size: @size-3;
+  vertical-align: middle;
+  line-height: @size-2;
+}
+.gameboard_cartRemoveIcon {
+  color: lighten(@playground-gray, 15%);
+  font-size: @size-3;
+}
+.gameboard_calAmountControls {
+  background-color: @playground-gray;
+  display: inline-block;
+  margin-right: @size-0;
+  vertical-align: middle;
+  color: @bg-gray;
+  padding: 0 @size-0 0 @size-3;
+  border-radius: @size-7;
+}
+.gameboard_calAmountInput {
+  background-color: darken(@playground-gray, 15%);
+  padding: @size-0 0;
+  border-radius: 6px;
+  color: @base-white;
+  line-height: @size-3;
+  margin-left: @size-0;
+  text-align: center;
+  vertical-align: middle;
+  width: 80px;
+}
+.gameboard_calAmountLabel {
+  background-color: @bg-gray;
+  border-radius: 6px;
+  line-height: 1;
+  padding: @size-0;
+  vertical-align: middle;
+  box-shadow: @insetShadow-dp2;  
+}
+.gameboard_calAmountInputlabel {
+  color: inherit;
+  vertical-align: middle;
+}
+.gameboard_calUnitBtn {
+  background-color: @playground-gray;
+  border-radius: 50%;
+  color: @light-orange;
+  height: @size-5;
+  line-height: 1;
+  margin-left: @size-0 / 2;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  width: @size-5;
+}
+.gameboard_calAddMinus {
+  display: inline-block;
+  vertical-align: middle;
+}
+.gameboard_calAddMinusBtn{
+  display: block;
+  width: @size-2;
+  height: @size-2;
+  border-radius: 4px;
+  font-size: @size-2;
+  cursor: pointer;
+  line-height: @size-2;
+  color: inherit;
+
+  &:first-child {
+    margin-bottom: @size-0 / 2;
+  }
+  .gameboard_calToggleIcon {
+    display: block;
+    width: @size-2;
+    height: @size-2;
+  }
+}
+.gameboard_calQuantityLabel {
+  .gameboard_calAmountLabel;
+  margin-left: 0;
+  margin-right: @size-0;
+  font-size: inherit;
+  border-radius: @size-7;
+  transition-property: background-color;
+  transition-duration: 0.25s;
+  transition-timing-function: @transition-timing;
+}
+.gameboard_calQuantityLabel__hasValue {
+  .gameboard_calQuantityLabel;
+  font-weight: 500;
+  background-color: darken(@accent-cinnabar, 5%);
+  color: @base-white;
+}
+.gameboard_calReturnLabel {
+  vertical-align: middle;
+  color: inherit;
+}
+.gameboard_calFormulaLabel {
+  margin: 0 @size-0 / 2;
+}
+.gameboard_calPrizeLabel {
+  .gameboard_calAmountLabel;
+  color: @accent-cinnabar;
+}

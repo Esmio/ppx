@@ -1,0 +1,86 @@
+@import "../variables.less";
+@import "../general/layout.less";
+@import "./homepageBody.less";
+@import "./lotteryTabs.less";
+
+.history_panel {
+	.homePage_panel;
+	padding: 0;
+	overflow: auto;
+	float: none;
+}
+
+.history_header {
+	.homePage_panelHeader;
+	padding: @size-0;
+}
+
+.history_btn__loadMore {
+	.history_header;
+	text-align: right;
+	font-weight: initial
+}
+.history_text {
+	font-size: @size-2;
+	color: @text-gray;
+}
+.ellipsis {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.history_lotName {
+	.ellipsis;
+	float: left;
+	width: 50%;
+	font-size: @size-2;
+	font-weight: 600;
+	color: @label-blue;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.history_lotDate {
+	.ellipsis;
+	.history_text;
+	float: right;
+	width: 50%;	
+	text-align: right;
+}
+.history_lotPhase {
+	font-size: @size-1;
+	color: @text-black;
+	margin-bottom: @size-1;
+}
+.history_listItem {
+	padding: @size-0;
+	border-top: 1px dashed @border;
+}
+.history_list{
+	overflow-y: scroll;
+	transition: height 0.3s ease-in-out;
+}
+.history_permalink {
+	.history_lotPhase;
+	margin-left: @size-0;
+	padding-left: @size-0;
+	color: inherit;
+	border-left: 1px solid @border;
+}
+
+.history_numbers {
+	.ellipsis;
+	.row;
+	overflow-x: auto;
+	display: block;
+	width: 100%;
+}
+
+.history_number {
+	.lotteryTab_contentsNumber;
+	font-size: @size-1;
+	height: 20px;
+	width: 20px;
+	line-height: 20px;
+	margin-bottom: 0;
+}

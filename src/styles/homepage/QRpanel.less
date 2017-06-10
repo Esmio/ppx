@@ -1,0 +1,68 @@
+@import '../variables.less';
+@import '../homepage/homepageBody.less';
+
+.QRPanel {
+  .homePage_panel;
+  float: none;
+}
+
+.QRPanel_header {
+  .homePage_panelHeader;
+}
+
+.QRPanel_body {
+  position: relative
+}
+.QR_code {
+  text-align: center
+}
+.QR_codeBody {
+  position: absolute;
+  height: 90px;
+  width: 90px;
+  top: 50%;
+  left: 25%;
+  display: inline-block;
+  transform: translate(-50%, -50%);
+  margin-top: @size-0;
+}
+.QR_codeBackdrop {
+  background-color: @base-white;
+  position: absolute;
+  height: 100%;
+  width: 100%
+}
+.QR_codeImg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 80px;
+  width: 80px;
+  transform: translate(-50%, -50%);
+}
+.QR_codeBorder {
+  height: @size-3;
+  width: @size-3;
+  display: inline-block;
+  position: absolute;
+  background-color: @accent-cinnabar;
+  z-index: -2
+}
+.QRPanel_device {
+  text-align: center
+}
+.QRPanel_buttons {
+  text-align: center
+}
+.QRPanel_button {
+  padding: @size-0;
+  font-weight: 600
+}
+.QRPanel_button__active {
+  .QRPanel_button;
+  color: @text-black;
+}
+.QRPanel_btnIcon {
+  font-size: @size-4;
+  margin-right: 4px
+}
