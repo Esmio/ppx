@@ -2,11 +2,13 @@ import React from 'react';
 import _ from 'lodash';
 import { connect } from 'dva';
 import predictMap from '../../assets/image/prediction_map.png';
-import { Row } from '../General';
 import css from '../../styles/homepage/PredictMap.less';
+import {hasTrendChart} from '../../utils';
+import {routerRedux} from 'dva/router';
 
 function PredictMap({
-  gameInfosRecommend
+  gameInfosRecommend,
+  dispatch
 }) {
   function renderSingleList(list) {
     return (
@@ -14,19 +16,25 @@ function PredictMap({
         {
           list.map((item, key) => {
             const { gameUniqueId, gameNameInChinese } = item;
-            return (
-              <p
+            return hasTrendChart(gameUniqueId) ? <a
                 key={gameUniqueId + key}
                 className={css.predictPanel_listItem}
+                href={`${location.href}trend?gameUniqueId=${gameUniqueId}`}
+                target="_blank"
               >
                 {gameNameInChinese}
-              </p>
-            );
+              </a> : null
           })
         }
       </div>
     );
   }
+  function handleImgClick(){
+    dispatch(routerRedux.push({
+      pathname: 'trendpage'
+    }))
+  }
+
   function renderLists() {
     const highFreqList = [];
     const lowFreqList = [];
@@ -49,11 +57,11 @@ function PredictMap({
   }
 
   return (
-    <Row className={css.predictPanel}>
+    <div className={css.predictPanel}>
       <h2 className={css.predictPanel_header}>彩票走勢圖</h2>
-      <img src={predictMap} alt="demo prediction map" className={css.predictPanel_banner} />
+      <img src={predictMap} alt="demo prediction map" className={css.predictPanel_banner} onClick={handleImgClick} />
       { gameInfosRecommend && renderLists(gameInfosRecommend)}
-    </Row>
+    </div>
   );
 }
 

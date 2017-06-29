@@ -4,46 +4,38 @@ import {
 } from '../services';
 
 const INITIAL_STATE = {
-  allHistory: null,
-	allGamesPrizeSettings: null,
-	announcement: null,
-	announcements: null,
-	gameInfosHot: null,
-	gameInfosRecommend: null,
-	generalContents: null,
-	menuIcons: null,
-	promotionBanners: null
+  allHistory: '',
+	allGamesPrizeSettings: '',
+	announcement: '',
+	announcements: '',
+	gameInfosHot: '',
+	gameInfosRecommend: '',
+	generalContents: '',
+	menuIcons: '',
+	promotionBanners: '',
+  selectedGame: 'HF_CQSSC',
 };
 
 export default {
 	namespace: 'gameInfosModel',
 	state: INITIAL_STATE,
 	reducers: {
-		getHomepageInfoSuccess(state, { payload }) {
-			const { data } = payload;
-			// console.debug('getHomepageInfoSuccess', data);
-			return { ...state, ...data };
-		},
-		getAllHistorySuccess(state, { payload }) {
-			const { data } = payload;
-			// console.debug('getAllHistorySuccess', data);
-			return { ...state, allHistory: data };
-		},
-		getAllGamesSettingSuccess(state, { payload }) {
-			const { allGamesPrizeSettings } = payload;
-
-			// console.debug('getAllGamesSettingSuccess', allGamesPrizeSettings);
-			return { ...state, allGamesPrizeSettings };
-		}
+		updateState(state, { payload }) {
+      return { ...state, ...payload };
+    },
+    initializeState(state, { payload }) {
+      const initialStates = _.pick(INITIAL_STATE, payload);
+      return { ...state, ...initialStates };
+    }
 	},
 	effects: {
 		*getHomepageInfo(payload, { call, put }) {
 			const response = yield call(request.getHomepageInfo);
 			const { data, err } = response;
       if (data) {
-        yield put({ type: 'getHomepageInfoSuccess', payload: response });
+        yield put({ type: 'updateState', payload: { ...data } });
       } else if (err) {
-        message.error(`${err.message}`);				
+        message.error(`${err.message}`);
 			} else if (!err && !data) {
         console.debug('获取首页质询 payload', payload);
       }
@@ -52,35 +44,30 @@ export default {
 			const response = yield call(request.getAllHistory);
 			const { data, err } = response;
 			if (data) {
-				yield put({ type: 'getAllHistorySuccess', payload: response });
+				yield put({ type: 'updateState', payload: { allHistory: data } });
 			} else if (err) {
-				message.error(`${err.message}`);				
-			} else if (!err && !data) {
-				console.debug('开奖大厅 payload', payload);
+				throw new Error(`无法获取开奖结果 ${err.message}`);
 			}
 		},
 		*getAllGamesSetting(payload, { call, put }) {
 			const response = yield call(request.getAllGamesSetting);
 			const { data, err } = response;
 			if (data) {
-				yield put({ type: 'getAllGamesSettingSuccess', payload: data });
+				const { allGamesPrizeSettings } = data;
+				yield put({ type: 'updateState', payload: { allGamesPrizeSettings } });
 			} else if (err) {
-				message.error(`${err.message}`);				
-			} else if (!err && !data) {
-				console.debug('购彩大厅 payload', payload);
+				throw new Error(`无法获取购彩信息 ${err.message}`);
 			}
-		}
+		},
 	},
 	subscriptions: {
 		setup({ history, dispatch }) {
-			return history.listen(({ pathname, action }) => {
+			return history.listen(({ action }) => {
 				function pathnameWasntReplace() {
 					return action !== 'REPLACE';
 				}
 				if (pathnameWasntReplace()) {
-					if (pathname === '/') {
-						dispatch({ type: 'getAllHistory' });
-					}
+					dispatch({ type: 'getAllHistory' });
 					dispatch({ type: 'getHomepageInfo' });
 					dispatch({ type: 'getAllGamesSetting' });
 				}

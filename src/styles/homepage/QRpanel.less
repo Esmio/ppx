@@ -11,34 +11,28 @@
 }
 
 .QRPanel_body {
-  position: relative
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 .QR_code {
   text-align: center
 }
 .QR_codeBody {
-  position: absolute;
   height: 90px;
   width: 90px;
-  top: 50%;
-  left: 25%;
   display: inline-block;
-  transform: translate(-50%, -50%);
   margin-top: @size-0;
 }
 .QR_codeBackdrop {
   background-color: @base-white;
-  position: absolute;
   height: 100%;
   width: 100%
 }
 .QR_codeImg {
-  position: absolute;
-  top: 50%;
-  left: 50%;
   height: 80px;
   width: 80px;
-  transform: translate(-50%, -50%);
 }
 .QR_codeBorder {
   height: @size-3;
@@ -52,11 +46,23 @@
   text-align: center
 }
 .QRPanel_buttons {
-  text-align: center
+  display: flex;
 }
 .QRPanel_button {
-  padding: @size-0;
-  font-weight: 600
+  float: left;
+  width: 50%;
+  text-align: center;
+  height: @button-height;
+  font-size: @size-2;
+  font-weight: 600;
+
+  [class*=mdi] {
+    font-size: @size-3;
+    margin-right: @size-0 / 2;
+  }
+  i {
+    vertical-align: middle;
+  }
 }
 .QRPanel_button__active {
   .QRPanel_button;

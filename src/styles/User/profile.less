@@ -31,7 +31,6 @@
   animation: floatIn 0.35s 1 @transition-timing;
   animation-fill-mode: forwards;
   border-radius: 6px;
-  box-shadow: @shadow-dp16;
   display: block;
   height: 800px;
   max-height: 90%;
@@ -46,7 +45,6 @@
   animation: floatIn 0.35s 1 @transition-timing;
   animation-fill-mode: forwards;
   border-radius: 6px;
-  box-shadow: @shadow-dp16;
   display: block;
   overflow: hidden;
   position: fixed;
@@ -83,12 +81,13 @@
   vertical-align: middle;
 }
 .profile_inputInlineRow {
+  .clearfix;
   display: flex;
-  align-items: flex-end;
   justify-content: flex-start;
   flex-direction: row;
 }
 .profile_inputInlineBlock {
+  .clearfix;
   display: flex;
   flex: 1 1;
 
@@ -109,6 +108,7 @@
   color: @accent-orange;
   margin-bottom: @size-3;
   padding: 0px 1rem;
+  align-self: flex-end;
 
   &:disabled {
     color: @border;
@@ -165,22 +165,7 @@
   float: left;
   text-align: center;
   overflow: auto;
-  padding: 0 @size-3 @size-3 @size-3;
-}
-.profile_contentHeadline {
-  .profile_sideNavLabel;
-  text-align: left;
-
-  i, em {
-    vertical-align: middle;
-    font-style: initial;
-    margin-right: @size-0;
-  }
-
-  span:last-child em {
-    font-weight: bold;
-    color: @label-blue;
-  }
+  padding: @size-3;
 }
 .profile_sideSubNavs {
   max-height: 0;
@@ -237,8 +222,8 @@
   }
   &::before {
     right: 100%;
-    top: @size-1;
-    height: @size-2;
+    top: 0;
+    height: 100%;
     width: @size-0 / 2;
     transform: translateX(0);
     background-color: @label-blue;
@@ -252,6 +237,14 @@
     border-width: @size-5 / 2;
     border-style: solid;
     border-color: transparent @bg-gray transparent transparent;
+  }
+  i {
+    vertical-align: middle;
+  }
+  [class*=mdi] {
+    font-size: @size-3;
+    margin-right: @size-0 /2;
+    color: @label-blue;
   }
 }
 .profile_sideNavLabel {
@@ -412,8 +405,8 @@
 .profile_accountUserProfile {
   background-color: @label-blue;
   border-radius: @size-6 / 2;
+  display: inline-block;
   color: @base-white;
-  float: left;
   margin-right: @size-0;
   height: @size-6;
   width: @size-6;
@@ -506,7 +499,7 @@
   background-color: @base-white;
   border-radius: 6px;
   display: inline-block;
-  margin: 0 auto @size-0 auto;
+  margin: @size-0 auto;
   padding: @size-3;
   position: relative;
   width: 100%;
@@ -1190,7 +1183,32 @@
 }
 .profile_formLabel {
   color: @text-black;
-  margin-bottom: @size-3;
+}
+.profile_breadcrumItem {
+  font-size: @size-2;
+  font-weight: normal;
+  margin-left: @size-0;
+  display: inline-block;
+  color: @label-blue;
+  vertical-align: middle;
+
+  [class*="mdi"] {
+    font-size: @size-4;
+    margin-right: @size-0;
+  }
+  i {
+    vertical-align: middle;
+  }
+  &[disabled] {
+    cursor: default;
+    color: inherit;
+  }
+}
+.profile_breadcrumItem__main {
+  .profile_breadcrumItem;
+  font-weight: inherit;
+  font-size: inherit;
+  margin-left: 0;  
 }
 .profile_formLabelCaption {
   border: 1px solid @label-blue;
@@ -1213,6 +1231,24 @@
     box-shadow: none;
   }
 }
+.profile_guestRegisterBtn {
+  margin: 0 @size-0;
+  border: 1px solid @label-blue;
+  border-radius: 6px;
+
+  &:disabled {
+    border-color: @border;
+  }
+}
+.profile_registerFooter {
+  font-size: @size-2;
+  color: @text-gray;
+
+  a {
+    color: @label-blue;
+    border-bottom: 1px solid @label-blue;
+  }
+}
 .profile_formBtn {
   border: 1px solid @bg-gray;
   color: @text-black;
@@ -1224,27 +1260,27 @@
   border: 1px solid @border;
   border-radius: 6px;
 }
-.profile_radioRow {
-  .row;
-  margin-bottom: @size-3;
-
-}
 .profile_inputBox {
   margin: 0 auto @size-3 auto;
   display: block;
   width: 100%;
   position: relative;
 }
+.profile_radioRow {
+  .profile_inputBox;
+}
 .profile_radioBtn {
   font-size: @size-2;
   color: @text-gray;
+  height: @button-height;
   margin-right: @size-3;
   i {
+    display: inline-block;
     font-size: @size-4;
     margin-right: @size-0 / 2;
   }
   i, span {
-    vertical-align: middle
+    line-height: @size-2;
   }
 }
 .profile_radioBtn__checked {
@@ -1262,6 +1298,10 @@
   span {
     vertical-align: middle;
   }
+}
+.profile_readOnlyIcon {
+  margin-left: @size-0;
+  color: @border;
 }
 .profile_input {
   padding: 0 @size-0;
@@ -1287,7 +1327,6 @@
   &:read-only,
   &:disabled {
     border-color: @bg-gray;
-    color: @text-gray;
   }
 }
 .profile_input[type*="time"],
@@ -1571,6 +1610,7 @@
   font-size: @size-2;
 
   td {
+    position: relative;
     line-height: @size-6;
     padding: 0 @size-0;
     font-size: inherit;
@@ -1596,15 +1636,131 @@
       &:nth-child(even) {
         td {
           background-color: @bg-gray;
+
+          .profile_tableInput {
+            background-color: @base-white;
+          }
         }
       }
     }
   }
   button {
-    text-align: left;
     line-height: 1;
-    vertical-align: middle;
+    text-align: inherit;
+    height: @button-height;
   }
+  [data-clipboard-text] {
+    display: block;
+    width: 100%;
+  }
+}
+.profile_tableTotalRow {
+  td {
+    font-weight: bold;
+    border-top: 3px double @label-blue;
+    border-bottom: 1px solid @label-blue;
+  }
+}
+.profile_tableInput {
+  background-color: @bg-gray;
+  border-radius: 6px;
+  box-shadow: @insetShadow-dp2;
+  height: @button-height;
+}
+.profile_tableDateInput {
+  .clearfix;
+  display: inline-block;
+  width: auto;
+  position: relative;
+
+  input[type=date] {
+    background-color: transparent;
+    display: inline-block;
+    padding-left: @size-4 + @size-0;
+    z-index: 5;
+
+    &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    &::-webkit-clear-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    &::-webkit-calendar-picker-indicator {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: @size-3 + (@size-0 * 2);
+      width: @size-4;
+      z-index: 999;
+      color: rgba(0,0,0,0);
+      opacity: 0;
+      background-color: transparent;
+    }
+  }
+}
+.profile_tableDateInputIcon {
+  z-index: 0;
+  font-size: @size-4;
+  position: absolute;
+  display: inline-block;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.profile_tableDateClearIcon {
+  opacity: 0.6;
+  position: absolute;
+  height: auto;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+
+}
+.profile_tableIconBtn {
+  height: @button-height - @size-0;
+  width: @button-height - @size-0;
+  text-align: center;
+  display: inline-block;
+  color: @text-black;
+  i {
+    display: inline-block;
+    height: 100%;
+    font-size: inherit;
+  }
+}
+.profile_tableBtn {
+  font-size: @size-2;
+  color: @text-gray;
+  height: @button-height;
+  padding: 0 @size-0;
+}
+.profile_tableBtn__cinnabar {
+  .profile_tableBtn;
+  color: @accent-cinnabar;
+}
+.profile_tableBtn__teal {
+  .profile_tableBtn;
+  color: @accent-teal;
+}
+.profile_tableIconBtn__confirm {
+  .profile_tableIconBtn;
+  background-color: @accent-teal;
+  color: @base-white;
+  border-radius: 50%;
+  box-shadow: @shadow-dp2;
+  margin-right: @size-0;
+  font-size: @size-3;
+}
+.profile_tableIconBtn__remove {
+  .profile_tableIconBtn;
+  font-size: @size-5;  
+  width: auto;
+  color: @accent-cinnabar;
 }
 .profile_tableMenuDownIcon {
   font-size: @size-4;
@@ -1620,14 +1776,19 @@
 }
 .profile_tableAnchor {
   color: @label-blue;
+  display: block;
+  text-align: inherit;
   i {
     vertical-align: middle;
+  }
+  &[disabled] {
+    color: inherit;
+    cursor: default;
   }
 }
 .profile_popUpBody {
   .row;
   position: relative;
-  margin-bottom: @size-3;
 }
 @keyframes popDown {
   from { opacity: 0; transform: scale(1.25) }
@@ -1661,9 +1822,11 @@
 }
 .profile_popUpHeader {
   .row;
-  padding-bottom: @size-3;
-  margin-bottom: @size-3;
   border-bottom: 1px solid @border;
+  clear: left;
+  margin-bottom: @size-3;
+  margin-top: @size-5;
+  padding-bottom: @size-3;
 }
 .profile_popUpHeadline {
   vertical-align: middle;
@@ -1725,11 +1888,26 @@
 .profile_popUpCloseBtn {
   color: @accent-cinnabar;
   font-size: @size-2;
-  font-weight: bold;
+  margin: 0 0 -@size-0 0;
   line-height: 1;
-  position: absolute;
-  right: @size-0;
-  top: @size-3;
+  float: right;
+  z-index: 2;
+
+  [class*=mdi] {
+    font-size: @size-4;
+    margin-left: @size-0;    
+  }
+  i {
+    vertical-align: middle;
+  }
+}
+.profile_popUpReturnBtn {
+  .profile_popUpCloseBtn;
+  float: left;
+  [class*=mdi] {
+    margin-left: 0;    
+    margin-right: @size-0;
+  }
 }
 .profile_select {
   background-color: @base-white;
@@ -1918,4 +2096,8 @@
 .profile_tableClearIcon__active {
   .profile_tableClearIcon;
   color: rgba(255, 255, 255, 0.6);
+}
+
+.team_reports{
+  
 }

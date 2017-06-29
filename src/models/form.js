@@ -7,6 +7,9 @@ import lessVar from '../styles/variables.less';
 const { accentTeal, accentCinnabar } = lessVar;
 
 const INITIAL_STATE = {
+  affCode: { value: '' },
+  affCodeStatus: { value: 'ON' },
+  affCodeUrl: { value: '' },
   bankAccountName: { value: '' },
   bankAddress: { value: '' },
   bankCardExist: false,
@@ -19,10 +22,12 @@ const INITIAL_STATE = {
   email: { value: '' },
   generatedVarifyCode: '',
   identityNumber: { value: '' },
+  memberType: 'AGENT',
   newPassword: { value: '' },
   nickname: { value: '' },
   password: { value: '' },
   phoneNumber: { value: '' },
+  prizeGroup: { value: 1800 },
   qq: { value: '' },
   realName: { value: '' },
   receiptName: { value: '' },
@@ -35,6 +40,7 @@ const INITIAL_STATE = {
   securityPassword: { value: '' },
   selectedBankId: '',
   topupAmount: { value: '' },
+  transferAmount: { value: '' },
   topupCardRealname: { value: '' },
   topupDate: { value: moment(new Date()).format('YYYY-MM-DD') },
   topupTime: { value: moment(new Date()).format('HH:mm') },
@@ -44,6 +50,7 @@ const INITIAL_STATE = {
   varifyCode: { value: '' },
   varifyPassed: false,
   withdrawalAmount: { value: '' },
+  webUniqueCode: ''
 };
 
 export default {
@@ -121,22 +128,23 @@ export default {
       const { userModel } = yield select(state => state);
       const userData = _.pick(
         userModel.userData,
-        ['email', 'nickname', 'phoneNumber', 'qq', 'realName']
+        ['email', 'nickname', 'phoneNumber', 'realName', 'prizeGroup', 'role', 'username']
       );
       const payload = _.mapValues(userData, (data) => {
         return { value: data };
       });
+      payload.memberType = userData.role;
       yield put({
         type: 'updateState', payload
       });
     },
-    *getBrowserUniqueId({ payload }, { put }) {
+    *getBrowserUniqueId(payloadObj, { put }) {
       const webUniqueCode = yield validate.generateBrowserId();
       yield put({
         type: 'updateState', payload: { webUniqueCode }
       });
     },
-    *getBankCardDetails({ payload }, { call, put, select }) {
+    *getBankCardDetails(payloadObj, { call, put, select }) {
       const { userModel } = yield select(state => state);
       const { banksOptions } = userModel;
       const response = yield call(request.getBankCardDetails, userModel);
@@ -218,8 +226,7 @@ export default {
         });
       }
     },
-    // post
-    *getValidatePic({ payload }, { call, put, select }) {
+    *getValidatePic(payloadObj, { call, put, select }) {
       const { formModel } = yield select(state => state);
       const response = yield call(request.getValidatePic, formModel);
       const { data, err } = response;

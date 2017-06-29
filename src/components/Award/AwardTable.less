@@ -1,0 +1,102 @@
+@ballColor: #FF0000;
+
+.container {
+  width: 1200px;
+  margin: 20px auto;
+}
+
+.align {
+  display: flex;
+  align-items: center;
+}
+
+.ball {
+  display: inline-block;
+  height: 22px;
+  line-height: 22px;
+  width: 22px;
+  text-align: center;
+  color: #FFF;
+  margin-right: 5px;
+  border-radius: 50%;
+  box-shadow: rgb(245, 151, 142) 0 1px 0 0 inset;
+  text-shadow: rgb(129, 14, 5) 0 1px 0;
+}
+
+.opening {
+  display: inline-block;
+  background-color: #3c90be;
+  color: #FFF;
+  padding: 4px 40px;
+  border-radius: 16px;
+}
+
+.ssc {
+  composes: ball;
+  background: @ballColor;
+}
+
+.six {
+  composes: ball;
+  text-shadow: rgb(129, 14, 5) 1px 0 0;
+}
+
+.k3 {
+  composes: align;
+  &:last-child {
+    margin-left: 6px;
+  }
+}
+
+.erbaNumber {
+  composes: ball;
+  background-color: @ballColor;
+  margin-right: 25px;
+  position: relative;
+  &::after {
+    content: "+";
+    color: #000;
+    font-size: 16px;
+    display: inline-block;
+    position: absolute;
+    left: 30px;
+  }
+  &:nth-of-type(3) {
+    margin-right: 10px;
+    &::after {
+      content: "";
+      display: none;
+    }
+  }
+}
+
+.erbaSum {
+  composes: ball;
+  margin-left: 10px;
+  background-color: @ballColor;
+}
+
+.saizi {
+  margin-right: 6px;
+  img {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+  }
+
+}
+
+.poker {
+  composes: align;
+  span {
+    display: inline-block;
+    margin-right: 6px;
+    padding-left: 4px;
+    width: 30px;
+    height: 50px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+  }
+}
+

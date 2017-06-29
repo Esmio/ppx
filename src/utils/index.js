@@ -23,3 +23,7 @@ export { testStr } from './testStr';
 export { toLettercase } from './lettercase';
 export { getRandomInt } from './getRandomInt';
 export { trimSpecialChar } from './trimSpecialChar';
+export { randomWord } from './randomWord';
+export { hasTrendChart } from './hasTrendChart';
+export { getConcatArray } from './getConcatArray';
+export { getPrizePercentage } from './getPrizePercentage';

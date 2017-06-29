@@ -3,25 +3,35 @@ import {
 } from '../services';
 
 const INITIAL_STATE = {
-  winnerList: null,
-  allHistory: null,
-  highFreqSelectedTab: null,
-  highFreqSelectedContent: null,
-  lowFreqSelectedTab: null,
-  lowFreqSelectedContent: null,
-	announcement: null,
-	announcements: null,
-	gameInfosHot: null,
-	gameInfosRecommend: null,
-	generalContents: null,
-	menuIcons: null,
-	promotionBanners: null
+  winnerList: '',
+  allHistory: '',
+  highFreqSelectedTab: '',
+  highFreqSelectedContent: '',
+  lowFreqSelectedTab: '',
+  lowFreqSelectedContent: '',
+	announcement: '',
+	announcements: '',
+	gameInfosHot: '',
+	gameInfosRecommend: '',
+	generalContents: '',
+	menuIcons: '',
+	promotionBanners: '',
+	helpListData: null,
+	id: 0,
+	content: ''
 };
 
 export default {
 	namespace: 'homeInfoModel',
 	state: INITIAL_STATE,
 	reducers: {
+		updateState(state, { payload }) {
+      return { ...state, ...payload };
+    },
+    initializeState(state, { payload }) {
+      const initialStates = _.pick(INITIAL_STATE, payload);
+      return { ...state, ...initialStates };
+    },
 		getTopWinnersSuccess(state, { payload }) {
 			const { data } = payload;
 			// console.debug('getTopWinnersSuccess', data);
@@ -59,6 +69,10 @@ export default {
 				console.debug('玩家胜利名次 payload', payload);
 			}
 		},
+		*getHelpList(payload, { call, put }) {
+			const { data } = yield call(request.getHelpList);
+			yield put({ type: 'updateState', payload: { helpListData: data } });
+		}
 	},
 	subscriptions: {
 		setup({ history, dispatch }) {
@@ -66,8 +80,11 @@ export default {
 				if (pathname === '/') {
 					dispatch({ type: 'getHomepageInfo' });
 					dispatch({ type: 'getTopWinners' });
+					dispatch({ type: 'getHelpList' });
 					dispatch({ type: 'layoutModel/setSideNavVisibility', payload: true });
 					dispatch({ type: 'layoutModel/overwriteSideNav', payload: true });
+				} else if (pathname === '/helplist') {
+					dispatch({ type: 'getHelpList' });
 				} else {
 					dispatch({ type: 'layoutModel/setSideNavVisibility', payload: false });
 					dispatch({ type: 'layoutModel/overwriteSideNav', payload: false });

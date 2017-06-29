@@ -1,7 +1,5 @@
 import { message } from 'antd';
-import React from 'react';
 import _ from 'lodash';
-import moment from 'moment';
 import { routerRedux } from 'dva/router';
 import { type as TYPE } from '../utils';
 import { apiRequest as request, validate } from '../services';
@@ -9,30 +7,41 @@ import { accentCinnabar, accentTeal } from '../styles/variables.less';
 
 const INITIAL_STATE = {
   accessToken: null,
-  awaitingResponse: false,
   authenticationState: 'REGISTER',
+  awaitingResponse: false,
   bankAccounts: [],
   banksOptions: TYPE.banksOptions,
   cardIsDefault: false,
   dailyWithdrawWithAdminSettingsResult: '',
   generatedVarifyCode: '',
-  loginHistory: [],
+  myCashFlow: [],
+  myCashFlowCount: 0,
+  myCommissionHistory: [],
+  commissionDetail: [],
+  commissionDetailCount: 0,
+  myLoginHistory: [],
   password: '',
   passwordInputMsg: '',
   selectedBankCardId: '',
+  status: 'ALL',
+  taskIdentifier: '',
+  totalBetsSum: 0,
+  totalCommission: 0,
   userAgreed: true,
   userData: null,
   userIdExist: null,
-  username: '',
-  usernameInputMsg: '',
 };
 
 export default {
 	namespace: 'userModel',
 	state: INITIAL_STATE,
 	reducers: {
-    getAccessTokenSuccess(state, { payload }) {
-      return { ...state, accessToken: payload };
+    updateState(state, { payload }) {
+      return { ...state, ...payload };
+    },
+    initializeState(state, { payload }) {
+      const initialStates = _.pick(INITIAL_STATE, payload);
+      return { ...state, ...initialStates };
     },
     getUserIdSuccess(state, { payload }) {
       const { data } = payload;
@@ -49,38 +58,6 @@ export default {
       };
     },
     getCardsAndWithdrawDetailSuccess(state, { payload }) {
-      return { ...state, ...payload };
-    },
-    getCurrentUserSuccess(state, { payload }) {
-      const {
-        nickname, realName, username, qq, email, phoneNumber, identityNumber
-      } = payload;
-
-      return { ...state,
-        email,
-        identityNumber,
-        nickname,
-        password: '',
-        passwordInputMsg: '',
-        phoneNumber,
-        qq,
-        realName,
-        userData: payload,
-        userIdExist: null,
-        username,
-        usernameInputMsg: '',
-      };
-    },
-    getCurrentUserFailed() {
-      localStorage.removeItem(TYPE.accessToken);
-      message.warning(`${TYPE.title}, 登陆过时，请重新登陆`);
-      return { ...INITIAL_STATE };
-    },
-    getUserLogoutSuccess() {
-      localStorage.removeItem(TYPE.accessToken);
-      return { ...INITIAL_STATE };
-    },
-    updateState(state, { payload }) {
       return { ...state, ...payload };
     },
     updateInfoSuccess(state, { payload }) {
@@ -102,10 +79,6 @@ export default {
           message: payload.message
         }
       };
-    },
-    initializeState(state, { payload }) {
-      const initialState = _.pick(INITIAL_STATE, payload);
-      return { ...state, ...initialState };
     },
     toggleAgree(state) {
       const { userAgreed } = state;
@@ -147,53 +120,116 @@ export default {
         console.log('查询用户名', payload);
       }
     },
-    *getLoginHistory({ payload }, { call, put, select }) {
+    *getMyLoginHistory(payloadObj, { call, put, select }) {
       const { userModel } = yield select(state => state);
-      const response = yield call(request.getLoginHistory, userModel);
+      const response = yield call(request.getMyLoginHistory, userModel);
       const { data, err } = response;
       if (data) {
-        yield put({ type: 'updateState', payload: { loginHistory: data.datas } });
+        yield put({ type: 'updateState', payload: { myLoginHistory: data.datas } });
       } else if (err) {
-        console.log('无法获取登陆历史', err.message);
+        console.log('无法获取登录历史', err.message);
       }
     },
-    *getUserLogout({ payload }, { call, put, select }) {
+    *getMyCommission(payloadObj, { call, put, select }) {
+      yield put({ type: 'updateState', payload: { awaitingResponse: true } });
+      
+      const { userModel, dataTableModel } = yield select(state => state);
+      const response = yield call(request.getMyCommission, userModel, dataTableModel);
+      const { data, err } = response;
+      if (data) {
+        const { datas, totalBetsSum, totalCommission } = data;
+        yield put({
+          type: 'updateState',
+          payload: {
+            myCommissionHistory: datas, totalBetsSum, totalCommission
+          }
+        });
+        yield put({ type: 'updateState', payload: { awaitingResponse: false } });
+      } else if (err) {
+        yield put({ type: 'updateState', payload: { awaitingResponse: false } });        
+        throw new Error(`无法获取佣金历史, ${err.message}`);
+      }
+    },
+    *getCommissionDetail(payloadObj, { call, put, select }) {
+      yield put({ type: 'updateState', payload: { awaitingResponse: true } });
+      const { userModel, dataTableModel } = yield select(state => state);
+      const response = yield call(request.getCommissionDetail, userModel, dataTableModel);
+      const { data, err } = response;
+      if (data) {
+        yield put({ type: 'updateState', payload: { awaitingResponse: false } });
+        yield put({
+          type: 'updateState',
+          payload: {
+            commissionDetail: data.datas,
+            commissionDetailCount: data.totalCount
+          }
+        });
+      } else if (err) {
+        yield put({ type: 'updateState', payload: { awaitingResponse: false } });
+        throw new Error(`无法获取佣金详情，${err.message}`);
+      }
+    },
+    *getUserLogout(payloadObj, { call, put, select }) {
       const { accessToken } = yield select(state => state.userModel);
       const response = yield call(request.getUserLogout, accessToken);
       const { err, data } = response;
       if (data) {
-        yield put({ type: 'getUserLogoutSuccess' });
-        yield put(routerRedux.replace('/'));
+        localStorage.removeItem(TYPE.accessToken);
+        yield put({ type: 'initializeState', payload: _.keys(INITIAL_STATE) });
+        yield put({
+          type: 'layoutModel/initializeState',
+          payload: ['shouldShowProfileModal', 'shouldShowAuthModel']
+        });
       } else if (err) {
         message.error(`用户登出 ${err.message}`);
-      } else if (!err && !data) {
-        console.log('用户登出 payload', payload);
       }
     },
-    *getAccessToken({ payload }, { put }) {
+    *getAccessToken(payloadObj, { put }) {
       const accessToken = yield localStorage.getItem(TYPE.accessToken);
       if (accessToken) {
-        yield put({ type: 'getAccessTokenSuccess', payload: accessToken });
+        yield put({ type: 'updateState', payload: { accessToken } });
         yield put({ type: 'getCurrentUser' });
       }
     },
-    *getCurrentUser({ payload }, { call, put, select }) {
+    *getCurrentUser(payloadObj, { call, put, select }) {
       const { accessToken } = yield select(state => state.userModel);
       const response = yield call(request.getCurrentUser, accessToken);
       const { err, data } = response;
       if (data) {
         yield put({
-          type: 'getCurrentUserSuccess',
-          payload: data
+          type: 'updateState', payload: { ...data, userData: data }
         });
-      } else {
         yield put({
-          type: 'getCurrentUserFailed',
-          payload: err.message
+          type: 'initializeState', payload: ['userIdExist']
+        });
+      } else if (err) {
+        localStorage.removeItem(TYPE.accessToken);
+        message.warning(`登陆失败，${err.message}`);
+        yield put({
+          type: 'initializeState', payload: [_.keys(INITIAL_STATE)]
         });
       }
     },
-    *getCardsAndWithdrawDetail({ payload }, { call, put, select }) {
+    *getMyCashFlow(payloadObj, { call, put, select }) {
+      yield put({ type: 'updateState', payload: { awaitingResponse: true } });
+      const { userModel, dataTableModel } = yield select(state => state);
+      const response = yield call(request.getMyCashFlow, userModel, dataTableModel);
+      const { data, err } = response;
+      if (data) {
+        yield put({
+          type: 'updateState',
+          payload: {
+            myCashFlow: data.datas,
+            myCashFlowCount: data.totalCount
+          }
+        });
+        yield put({ type: 'updateState', payload: { awaitingResponse: false } });
+      } else if (err) {
+        yield put({ type: 'updateState', payload: { awaitingResponse: false } });
+        throw new Error(`无法获取账户明细，${err.message}`);
+      }
+    },
+    *getCardsAndWithdrawDetail(payloadObj, { call, put, select }) {
       const { userModel } = yield select(state => state);
       const response = yield call(request.getCardsAndWithdrawDetail, userModel);
       const { err, data } = response;
@@ -206,7 +242,7 @@ export default {
         throw new Error(`无法获取银行卡信息, ${err}`);
       }
     },
-    *putUserLogin({ payload }, { call, put, select }) {
+    *putUserLogin(payloadObj, { call, put, select }) {
       yield put({ type: 'updateState', payload: { awaitingResponse: true } });      
       const { formModel } = yield select(state => state);
       const response = yield call(request.putUserLogin, formModel);
@@ -214,7 +250,7 @@ export default {
       if (data) {
         const accessToken = data.oauthToken.access_token;
         yield localStorage.setItem(TYPE.accessToken, accessToken);
-        yield put({ type: 'getAccessTokenSuccess', payload: accessToken });
+        yield put({ type: 'updateState', payload: { accessToken } });        
         yield put({ type: 'getCurrentUser' });
         yield put({
           type: 'formModel/initializeState', payload: ['username', 'password', 'varifyCode']
@@ -235,7 +271,9 @@ export default {
         yield put({ type: 'updateState', payload: { awaitingResponse: false } });
       }
     },
-    *putUserInfo({ payload }, { call, put, select }) {
+    *putUserInfo(payloadObj, { call, put, select }) {
+      yield put({ type: 'updateState', payload: { awaitingResponse: true } });
+      
       const { userModel, formModel } = yield select(state => state);
       const response = yield call(request.putUserInfo, userModel, formModel);
       const { err } = response;
@@ -248,6 +286,7 @@ export default {
             }
           }
         });
+        yield put({ type: 'updateState', payload: { awaitingResponse: false } });
       } else {
         yield put({
           type: 'formModel/updateState',
@@ -257,10 +296,11 @@ export default {
             }
           }
         });
+        yield put({ type: 'updateState', payload: { awaitingResponse: false } });        
         yield put({ type: 'getCurrentUser' });
       }
     },
-    *putRegisterInfo({ payload }, { call, put, select }) {    
+    *putRegisterInfo(payloadObj, { call, put, select }) {    
       const { formModel, userModel } = yield select(state => state);
       const response = yield call(request.putRegisterInfo, userModel, formModel);
       const { err } = response;
@@ -290,7 +330,7 @@ export default {
         });
       }
     },
-    *putDefaultBankAccount({ payload }, { call, put, select }) {
+    *putDefaultBankAccount(payloadObj, { call, put, select }) {
       const userModel = yield select(state => state.userModel);
       const response = yield call(request.putDefaultBankAccount, userModel);
       const { err } = response;
@@ -308,7 +348,7 @@ export default {
         throw new Error(err.message);
       }
     },
-    *postBankInfo({ payload }, { call, put, select }) {
+    *postBankInfo(payloadObj, { call, put, select }) {
       const { userModel, formModel } = yield select(state => state);
       const response = yield call(request.postBankInfo, userModel, formModel);
       const { err } = response;
@@ -337,23 +377,19 @@ export default {
         });
       }
     },
-    *postPreRegisterGuest({ payload }, { call, put }) {
+    *postPreRegisterGuest(payloadObj, { call, put }) {
       yield put({ type: 'updateState', payload: { awaitingResponse: true } });
       const response = yield call(request.postPreRegisterGuest);
       const { data, err } = response;
       if (data) {
-        const password = moment(new Date()).format('DDMMYYhhmm');
         yield put({
           type: 'formModel/updateState',
           payload: {
             username: { value: data.username },
-            password: { value: password },
-            repeatPassword: { value: password },  
           }
         });
-        yield put({ type: 'postGuestRegistration' });
-      } else if (err) {
         yield put({ type: 'updateState', payload: { awaitingResponse: false } });
+      } else if (err) {
         yield put({
           type: 'formModel/updateState',
           payload: {
@@ -362,66 +398,31 @@ export default {
             }
           }
         });
+        yield put({ type: 'updateState', payload: { awaitingResponse: false } });
       }
     },
-    *postGuestRegistration({ payload }, { call, put, select }) {
-      const { formModel } = yield select(state => state);
-      const response = yield call(request.postGuestRegistration, formModel);
-      const { password } = formModel;
-      const { err, data } = response;
-      if (data) {
-        yield put({
-          type: 'formModel/updateState',
-          payload: {
-            responseMsg: {
-              msg: ['试玩账号注册成功，密码暂为: ', <strong>{password.value}</strong>],
-              icon: 'checkbox-marked-circle-outline',
-              color: accentTeal
-            }
-          }
-        });
-        yield put({ 
-          type: 'formModel/initializeState',
-          payload: [
-            'password', 'repeatPassword', 'userAgreed'
-          ]
-        });
-        yield put({
-          type: 'updateState', payload: { awaitingResponse: false, authenticationState: 'LOGIN' }
-        });   
-      } else if (err) {
-        yield put({
-          type: 'formModel/updateState',
-          payload: {
-            responseMsg: {
-              msg: err.message, icon: 'close-circle-outline', color: accentCinnabar
-            }
-          }
-        });  
-        yield put({ type: 'updateState', payload: { awaitingResponse: false } });      
-      }
-    },
-    *postRegistration({ payload }, { call, put, select }) {
+    *postRegistration(payloadObj, { call, put, select }) {
       yield put({ type: 'updateState', payload: { awaitingResponse: true } });
       const { formModel } = yield select(state => state);
       const response = yield call(request.postRegistration, formModel);
       const { err, data } = response;
       if (data) {
-        yield put({
-          type: 'formModel/updateState',
-          payload: {
-            responseMsg: {
-              msg: '注册成功', icon: 'checkbox-marked-circle-outline', color: accentTeal
-            }
-          }
-        });
+        yield put(routerRedux.replace('/'));
         yield put({ 
           type: 'formModel/initializeState',
-          payload: ['password', 'varifyCode', 'varifyPassed', 'userAgreed']
+          payload: ['password', 'repeatPassword', 'varifyCode', 'varifyPassed', 'userAgreed']
         });
+        const accessToken = data.oauthToken.access_token;
+        yield localStorage.setItem(TYPE.accessToken, accessToken);
+        yield put({ type: 'updateState', payload: { accessToken } });
+        message.success('恭喜你已注册成功！');
+        yield put({ type: 'getCurrentUser' });
         yield put({
           type: 'updateState',
-          payload: { awaitingResponse: false, authenticationState: 'LOGIN' }
+          payload: { awaitingResponse: false }
+        });
+        yield put({
+          type: 'layoutModel/updateState', payload: { shouldShowAuthModel: false }
         });
       } else if (err) {
         yield put({
@@ -435,7 +436,7 @@ export default {
         yield put({ type: 'updateState', payload: { awaitingResponse: false } });
       }
     },
-    *postPasswordInfo({ payload }, { call, put, select }) {
+    *postPasswordInfo(payloadObj, { call, put, select }) {
       const { userModel, formModel } = yield select(state => state);
       const response = yield call(request.postNewPassword, userModel, formModel);
       const { securityMode } = formModel;
@@ -466,7 +467,7 @@ export default {
         });
       }
     },
-    *deleteBankAccount({ payload }, { call, put, select }) {
+    *deleteBankAccount(payloadObj, { call, put, select }) {
       const userModel = yield select(state => state.userModel);
       const response = yield call(request.deleteBankAccount, userModel);
       const { err } = response;
@@ -487,20 +488,12 @@ export default {
   },
   subscriptions: {
     setup({ history, dispatch }) {
-			return history.listen(({ pathname }) => {
-        switch (pathname) {
-          case '/register':
-            dispatch({ type: 'createVarifyCode' });
-            break;
-          case '/user/profile':
-            dispatch({ type: 'getCardsAndWithdrawDetail' });
-            break;
-          default:
-            dispatch({ type: 'getAccessToken' });
-            break;
+			return history.listen(({ search }) => {
+        if (!search || search.indexOf('?pt=') < 0) {
+          dispatch({ type: 'getAccessToken' });
+        } else {
+          localStorage.removeItem(TYPE.accessToken);
         }
-        dispatch({ type: 'toggleRegistering', payload: pathname === '/register' });
-        dispatch({ type: 'toggleProfileEdit', payload: pathname.indexOf('/user/profile') >= 0 });
 			});
 		}
   }

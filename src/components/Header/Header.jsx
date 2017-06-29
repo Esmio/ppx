@@ -13,7 +13,7 @@ function Header() {
       <TopTray />
       <div className={css.header_login}>
         <div className={css.header_row}>
-          <Link to="/">
+          <Link className={css.header_logoAnchor} to="/">
             <img src={Logo} alt="106logo" className={css.header_logo} />
           </Link>
           <Login />

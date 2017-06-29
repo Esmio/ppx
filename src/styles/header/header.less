@@ -20,22 +20,25 @@
   vertical-align: middle;
   width: auto;
   height: 50px;
-  float: left;
+  display: inline-block;
+  margin: @size-0;
 }
 .header_login {
-  .row;
   text-align: center;
-  padding: @size-0 0;
   z-index: 97;
   position: relative;
 }
 .header_row {
-  .clearfix;
+  text-align: right;
   width: @page-width;
-  display: inline-block;
+  display: flex;
+  align-items: center;
   margin: 0 auto;
+  justify-content: space-between;
 }
-
+.header_logoAnchor {
+  float: left;
+}
 .header_authColumn,
 .header_logoColumn {
   .column;
@@ -45,6 +48,10 @@
   font-size: inherit;
   padding: 0 @size-1;
   border-left: 1px solid @border;
+
+  &:last-child {
+    padding-right: 0;
+  }
 }
 
 .header_permalinkIcon {

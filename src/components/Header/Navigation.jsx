@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
 import { Link } from 'dva/router';
 import { connect } from 'dva';
-import SideNav from './SideNav';
-import { PageContainer, Row, SLIcon } from '../General';
+import { PageContainer, SLIcon } from '../General';
 import css from '../../styles/header/navigation.less';
-import lessVar from '../../styles/variables.less';
 
-const {panelSide} = lessVar
 class Navigation extends Component {
   constructor() {
     super();
     this.state = {
       isHover: false,
-      hoverBgOffset: 236,
+      hoverBgOffset: 0,
       transitionSpeed: 0.25
     };
     this.navWidth = 0;
@@ -23,7 +20,7 @@ class Navigation extends Component {
     dispatch({ type: 'layoutModel/setActiveTab', payload: '首页' });
   }
   onNavHover(itemName) {
-    this.setState({ hoverBgOffset: this.navItemOffset[itemName] + 236, isHover: true });
+    this.setState({ hoverBgOffset: this.navItemOffset[itemName], isHover: true });
   }
   onNavBlur() {
     this.onNavHover(this.props.activeTab);
@@ -59,7 +56,7 @@ class Navigation extends Component {
     const sideNavToggleIconClass = shouldShowSideNav ?
     css.navigation_sideNavToggleIcon__reverse : css.navigation_sideNavToggleIcon;
     return (
-      <Row className={css.navigation}>
+      <div className={css.navigation}>
         <PageContainer className={css.navigation_body}>
           <div className={sideNavParentClass}>
             <button
@@ -76,7 +73,6 @@ class Navigation extends Component {
                 />
               }
             </button>
-            <SideNav className={css.navigation_sidenav} />
           </div>
           <div style={hoverBgStyle} className={css.navigation_hoverBg} />
           <div
@@ -107,9 +103,8 @@ class Navigation extends Component {
             })
             }
           </div>
-          
         </PageContainer>
-      </Row>
+      </div>
     );
   }
 }
@@ -123,9 +118,9 @@ export default connect(mapStatesToProps)(Navigation);
 
 const navList = [
   { linkText: '首页', url: '/' },
-  { linkText: '购彩大厅', url: '/playground' },
+  { linkText: '购彩大厅', url: '/betcenter' },
   { linkText: '手机购彩', url: '/' },
   { linkText: '优惠活动', url: '/specialoffer' },
-  { linkText: '开奖公告', url: '/' },
+  { linkText: '开奖公告', url: '/award' },
   { linkText: '走势图表', url: '/trendpage' },
 ];

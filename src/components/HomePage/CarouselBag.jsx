@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'dva';
-import { Carousel } from 'antd';
 import css from '../../styles/homepage/carousel.less';
 
 function CarouselBag({
@@ -28,9 +27,9 @@ function CarouselBag({
 		return <div />;
 	}
 	return (
-		<Carousel className={css.container} effect="fade" autoplay>
+		<div className={css.container}>
 			{ renderScene() }
-		</Carousel>
+		</div>
 	);
 }
 

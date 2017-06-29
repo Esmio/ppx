@@ -3,7 +3,8 @@ import * as service from '../services/specialOffer';
 export default {
   namespace: 'specialoffer',
   state: {
-    promotionList: null
+    promotionList: null,
+    pcPromotionTopImage: ''
   },
   reducers: {
   	save(state, action) {
@@ -13,7 +14,6 @@ export default {
   effects: {
   	*SpecialOfferList({payload}, {call, put}) {
   		const {data} = yield call(service.getSpecialOfferList);
-      console.log('data', data)
   		yield put({ type: 'save', payload: {...data}})
   	}
   },

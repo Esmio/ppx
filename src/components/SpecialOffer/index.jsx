@@ -10,8 +10,8 @@ class SpecialOffer extends React.Component {
 		super(props);
 	}
 	render() {
-		const {promotionList, dispatch} = this.props
-		let contentProps = {promotionList, dispatch};
+		const {promotionList, pcPromotionTopImage, dispatch} = this.props
+		let contentProps = {promotionList, pcPromotionTopImage, dispatch};
 		return (
 		    <div className={styles.normal}>
 		    	<Header/>
@@ -22,9 +22,8 @@ class SpecialOffer extends React.Component {
 	}
 }
 function mapStateToProps(state){
-	const {promotionList} = state.specialoffer
-	console.log('props', promotionList);
-	return {promotionList}
+	const {promotionList, pcPromotionTopImage} = state.specialoffer
+	return {promotionList, pcPromotionTopImage}
 }
 
 export default connect(mapStateToProps)(SpecialOffer);

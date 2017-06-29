@@ -31,10 +31,6 @@ export default {
       const initialState = _.pick(INITIAL_STATE, payload);
       return { ...state, ...initialState };
     },
-		getDOMHeight(state, { payload }) {
-			// console.log(payload.name, payload.height); // debugging 
-      return { ...state, [`${payload.name}Height`]: payload.height };
-    },
     setActiveTab(state, { payload }) {
       return { ...state, activeTab: payload };
     },

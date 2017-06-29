@@ -41,7 +41,7 @@ export const DIRECT_PICK_PULL_BET = 'direct_pick_pull_bet';
 export const DIRECT_MULTIPLY = 'direct_multiply';
 
 export const UNITS = {
-  元: 1, 角: 0.1, 分: 0.01, 厘: 0.001
+  元: 1, 角: 0.1, 分: 0.01
 };
 export const initialBetAmount = {
 	元: 2, 角: 0, 分: 0, 厘: 0
@@ -104,6 +104,8 @@ export const SPECIAL_NUM = ['特码'];
 export const MIX = ['混合'];
 export const SAME_UNSAME = ['同号', '不同号'];
 export const PICK_ALL = ['通选'];
+export const NUM_ONE = ['一码'];
+export const NUM_TWO = ['二码'];
 
 // buttons sets
 export const NUM_0_9 = numberGenerators.create({ length: 9 }).get();
@@ -119,8 +121,8 @@ export const LEADNUM_1_18 = numberGenerators.create({ length: 18, start: 1 }).ge
 export const LEADNUM_1_20 = numberGenerators.create({ length: 20, start: 1 }).getLeading();
 export const LEADNUM_1_49 = numberGenerators.create({ length: 49, start: 1 }).getLeading();
 export const LEADNUM_19_20 = numberGenerators.create({ length: 20, start: 19 }).get();
-export const BS_DS = ['大', '小', '单', '双'];
-export const BS_DS_EXTEND = [...BS_DS, '大单', '大双', '小单', '小双', '极大', '极小'];
+export const BSOE = ['大', '小', '单', '双'];
+export const BS_DS_EXTEND = [...BSOE, '大单', '大双', '小单', '小双', '极大', '极小'];
 export const MIX_TWO = ['红单', '红双', '红大', '红小', '蓝单', '蓝双', '蓝大', '蓝小', '绿单', '绿双', '绿大', '绿小'];
 export const MIX_THREE = [
   '红大单', '红大双', '红小单', '红小双',
@@ -134,9 +136,9 @@ export const SPECIAL_SYMBOLICS = [
 ];
 export const COLOR_THREE = ['红波', '蓝波', '绿波'];
 export const COLOR_NUM = {
-  '红波-e4393c': ['01', '02', '07', '08', '12', '13', '18', '19', '23', '24', '29', '30', '34', '35', '40', '45', '46'], // eslint-disable-line max-len
-  '蓝波-0b4a95': ['03', '04', '09', '10', '14', '15', '20', '25', '26', '31', '36', '37', '41', '42', '47', '48'], // eslint-disable-line max-len
-  '绿波-12b886': ['05', '06', '11', '16', '17', '21', '22', '27', '28', '32', '33', '38', '39', '43', '44', '49'], // eslint-disable-line max-len
+  '红波': ['01', '02', '07', '08', '12', '13', '18', '19', '23', '24', '29', '30', '34', '35', '40', '45', '46'], // eslint-disable-line max-len
+  '蓝波': ['03', '04', '09', '10', '14', '15', '20', '25', '26', '31', '36', '37', '41', '42', '47', '48'], // eslint-disable-line max-len
+  '绿波': ['05', '06', '11', '16', '17', '21', '22', '27', '28', '32', '33', '38', '39', '43', '44', '49'], // eslint-disable-line max-len
 };
 export const SYMBOLICS = [
   SYMBOLIC_SHU, SYMBOLIC_NIU, SYMBOLIC_HU, SYMBOLIC_TU, SYMBOLIC_LONG, SYMBOLIC_SHE,
@@ -158,9 +160,9 @@ export const FIVE_ELEMENTS = ['金', '木', '水', '火', '土'];
 export const DOUBLE_SAME_1_6 = ['11', '22', '33', '44', '55', '66'];
 export const DOUBLE_SAME_1_6__SINGLE = ['1|1|*', '2|2|*', '3|3|*', '4|4|*', '5|5|*', '6|6|*'];
 export const TRIPLE_SAME_1_6 = ['111', '222', '333', '444', '555', '666'];
-export const OPEN_OPTION_STRINGS = [
-  'W', 'Q', 'B', 'S', 'G'
-];
+export const OPEN_OPTION_STRINGS = {
+  万位: 'W', 千位: 'Q', 百位: 'B', 十位: 'S', 个位: 'G'
+};
 export const TRIPLE_PICK_ALL = ['*|*|*'];
 
 export const VALUE_REF = {
@@ -322,45 +324,66 @@ export const VALUE_REF = {
 
 VALUE_REF.NS3 = Object.assign({}, VALUE_REF.R3Z_HZ);
 export const REGISTER = '注册';
-export const LOGIN = '登陆';
+export const LOGIN = '登录';
 export const PASSWORD = 'PASSWORD';
 export const SECURITY_PASSWORD = 'SECURITY_PASSWORD';
 export const withdrawal = '提款';
 export const account = '账号';
 export const user = '用户';
 export const bank = '银行卡';
+export const dateFormat = 'Y, MMMM Do, a h:mm:ss';
 export const inputFieldRefs = {
-  username: '用户名',
-  password: '密码',
-  repeatPassword: '确认密码',
-  newPassword: '新密码',
-  repeatNewPassword: '确认新密码',
-  varifyCode: '验证码',
-  realName: '真实姓名',
-  nickname: '昵称',
-  identityNumber: '身份证号',
-  qq: 'QQ号',
-  email: '电邮地址',
-  phoneNumber: '手机号码',
-  securityPassword: '取款密码',
-  repeatSecurityPassword: '确认取款密码',
-  bankCardNo: '银行卡号',
+  affCode: '推广码',
+  affCodeStatus: '推广码状态',
+  affCodeUrl: '推广码链接',
   bankAccountName: '银行卡开户姓名',
-  bankName: '银行名称',
-  bankCode: '银行代码',
   bankAddress: '银行地址',
-  remarks: '备注',
-  receiptName: '收款人姓名',
-  topupCode: '充值码',
-  topupTime: '存款时间',
-  topupDate: '存款日期',
-  topupCardRealname: '存款人姓名',
-  topupAmount: '存款金额',
-  withdrawalAmount: '提款金额',
-  transferToupType: '存款方式',
+  bankCardNo: '银行卡号',
+  bankCode: '银行代码',
+  bankName: '银行名称',
   charge: '手续费',
+  email: '电邮地址',
+  identityNumber: '身份证号',
+  newPassword: '新密码',
+  nickname: '昵称',
+  password: '密码',
+  phoneNumber: '手机号码',
+  prizeGroup: '返点',
+  qq: 'QQ号',
+  realName: '真实姓名',
+  receiptName: '收款人姓名',
+  remarks: '备注',
+  repeatNewPassword: '确认新密码',
+  repeatPassword: '确认密码',
+  repeatSecurityPassword: '确认取款密码',
+  securityPassword: '取款密码',
+  topupAmount: '存款金额',
+  topupCardRealname: '存款人姓名',
+  topupCode: '充值码',
+  topupDate: '存款日期',
+  topupTime: '存款时间',
+  transferAmount: '转账金额',
+  transferToupType: '存款方式',
+  username: '用户名',
+  varifyCode: '验证码',
+  withdrawalAmount: '提款金额',
 };
-
+export const moneyOperationTypeRefs = {
+  TOPUP: '充值',
+  BONUS: '优惠',
+  CANC_BON: '取消优惠',
+  WITHDRAW: '提现',
+  CANC_WD: '取消提现',
+  CHARGE: '购彩',
+  WIN: '中奖',
+  CANC_WIN: '取消派彩',
+  REBATE: '返水',
+  FEE: '手续费',
+  CANC_FEE: '取消手续费',
+  COMMISSION: '返佣',
+  TRANS_IN: '转入',
+  TRANS_OUT: '转出'
+};
 export const transactionStateRefs = {
   ALL: '全部',
   WIN: '中奖',
@@ -408,7 +431,6 @@ export const paymentTypeRefs = {
   THIRD_PARTY: '在线支付',
   BANK: '银行卡转账',
 };
-
 export const bankTransferTypeRefs = {
   BANK_ONLINE: '网银转账',
   BANK_ATM: 'ATM自动柜员机',
@@ -420,38 +442,49 @@ export const bankTransferTypeRefs = {
   OTHER: '其他',
   UNRECOGNIZED: '未识别'
 };
+export const memberTypeRefs = {
+  PLAYER: '会员',
+  AGENT: '代理'
+};
+export const commissionStatusRefs = {
+  ALL: '全部',
+  INIT: '未发',
+  COMPLETE: '已发'
+};
+export const timeframeRefs = [
+  { displayText: '今天', dayCounts: 0 },
+  { displayText: '一天', dayCounts: 1 },
+  { displayText: '一周', dayCounts: 7 },
+  { displayText: '两周', dayCounts: 15 },
+  { displayText: '四周', dayCounts: 30 },  
+];
 export const userProfileNavs = {
-  我的信息: {
-    account: {
-      displayName: '账号信息',
-      icon: 'account-card-details',
-      subNavs: {
-        basicInfo: '基本信息',
-        securityInfo: '修改密码',
-        bankInfo: '银行卡信息'
-      }
-    },
-    transfer: {
-      displayName: '银行交易',
-      icon: 'credit-card',
-      subNavs: {
-        topup: '充值',
-        withdrawal: '提款',
-      }
-    },
-    record: {
-      displayName: '交易记录',
-      icon: 'format-list-numbers',
-      subNavs: {
-        allRecord: ' 账户明细',
-        orderRecord: '投注记录',
-        winningRecord: '奖金派送',
-        orderExpensesRecord: '投注消费',
-        topupRecord: '充值记录',
-        withdrawalRecord: '提款记录',
-      }
-    },
-  }
+  userCenter: [
+    { navKey: 'basicInfo', displayName: '基本信息', icon: 'account-card-details' },
+    { navKey: 'securityInfo', displayName: '修改密码', icon: 'account-key' },
+    { navKey: 'bankCardInfo', displayName: '银行卡信息', icon: 'credit-card-plus' },
+    { navKey: 'topupCtrl', displayName: '充值', icon: 'bank' },
+    { navKey: 'withdrawalCtrl', displayName: '提款', icon: 'cash-multiple' },
+    {
+      navKey: 'reports',
+      displayName: '报表',
+      icon: 'format-list-checks',
+      subNavs: [
+        { navKey: 'myCashFlow', displayName: '账户明细' },
+        { navKey: 'orderExpenses', displayName: '投注金额' },
+        { navKey: 'orderRecord', displayName: '投注记录' },
+        { navKey: 'topupRecord', displayName: '充值记录' },
+        { navKey: 'winningRecord', displayName: '奖金派送' },
+        { navKey: 'withdrawalRecord', displayName: '提款记录' },
+      ]
+    }
+  ],
+  agentCenter: [
+    { navKey: 'memberManage', displayName: '用户管理', icon: 'account-settings-variant' },
+    { navKey: 'affCodeManage', displayName: '推广管理', icon: 'message-bulleted' },
+    { navKey: 'commissionReport', displayName: '代理佣金', icon: 'clipboard-account' },
+    { navKey: 'teamOverallReport', displayName: '团队报表', icon: 'account-network' },
+  ]
 };
 
 export const paymentAmounts = [
@@ -460,92 +493,97 @@ export const paymentAmounts = [
 
 // 参考 http://tool.fxunion.com/SwiftCode.html
 export const banksOptions = {
-  BKCHCNBJ: {
+  zgyh: {
     displayName: '中国银行',
     cardNumberLength: 11,
     website: 'www.boc.cn'
   },
-  ICBKCNBJ: {
+  zggs: {
     displayName: '工商银行',
     cardNumberLength: 11,
     website: 'www.icbc.com.cn'
   },
-  ABOCCNBJ: {
+  nyyh: {
     displayName: '农业银行',
     cardNumberLength: 11,
     website: 'www.abchina.com'
   },
-  PCBCCNBJ: {
+  jsyh: {
     displayName: '建设银行',
     cardNumberLength: 11,
     website: 'www.ccb.com'
   },
-  COMMCNSH: {
+  jtyh: {
     displayName: '交通银行',
     cardNumberLength: 11,
     website: 'www.bankcomm.com'
   },
-  PSBCCNBJ: {
+  zgyz: {
     displayName: '中国邮政',
     cardNumberLength: 11,
     website: 'www.psbc.com'
   },
-  CIBKCNBJ: {
+  zxyh: {
     displayName: '中信银行',
     cardNumberLength: 11,
     website: 'www.citicbank.com'
   },
-  EVERCNBJ: {
+  gdyh: {
     displayName: '光大银行',
     cardNumberLength: 11,
     website: 'www.cebbank.com'
   },
-  HXBKCNBJ: {
+  hxyh: {
     displayName: '华夏银行',
     cardNumberLength: 11,
     website: 'www.hxb.com.cn'
   },
-  GDBKCN22: {
+  msyh: {
+    displayName: '民生银行',
+    cardNumberLength: 11,
+    website: 'www.cmbc.com.cn'
+  },
+  gfyh: {
     displayName: '广发银行',
     cardNumberLength: 11,
     website: 'www.cgbchina.com.cn'
   },
-  SZDBCNBS: {
+  zgpa: {
     displayName: '平安银行',
     cardNumberLength: 11,
     website: 'bank.pingan.com'
   },
-  CMBCCNBS: {
+  zsyh: {
     displayName: '招商银行',
     cardNumberLength: 11,
     website: 'www.cmbchina.com'
   },
-  FJIBCNBA: {
+  pfyh: {
     displayName: '兴业银行',
     cardNumberLength: 11,
     website: 'www.cib.com.cn'
   },
-  SPDBCNSH: {
+  bhyh: {
     displayName: '浦发银行',
     cardNumberLength: 11,
     website: 'www.spdb.com.cn'
   },
-  BOSHCNSH: {
+  shyh: {
     displayName: '上海银行',
     cardNumberLength: 11,
     website: 'www.bankofshanghai.com'
   },
-  BJCNCNBJ: {
+  bjyh: {
     displayName: '北京银行',
     cardNumberLength: 11,
     website: 'www.bankofbeijing.com.cn'
   },
-  BRCBCNBJ: {
+  bjns: {
     displayName: '北京农商银行',
     cardNumberLength: 11,
     website: 'www.bjrcb.com'
   },
-  SHRCCNSH: {
+  shns: {
     displayName: '上海农商银行',
     cardNumberLength: 11,
     website: 'www.srcb.com'

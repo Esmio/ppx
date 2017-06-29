@@ -1,19 +1,19 @@
-import React from 'react';
+import React, { Component } from 'react';
 import TopLinks from './TopLinks';
 import Marquee from './Marquee';
-import { PageContainer } from '../General/';
+
 import css from '../../styles/header/header.less';
 
-function TopTray() {
-  return (
-    <div className={css.header_topTray}>
-      <PageContainer>
+class TopTray extends Component {
+  render() {
+    return (
+      <div className={css.header_topTray}>
         <div className={css.header_marquee} >
-          <Marquee />
+          <Marquee announcements={this.props.announcements} />
         </div>
         <TopLinks />
-      </PageContainer>
-    </div>
-  );
+      </div>
+    );
+  }
 }
 export default TopTray;

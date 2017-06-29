@@ -2,62 +2,106 @@ import React from 'react';
 import { PageContainer, Row, Column, MDIcon } from '../General';
 import css from '../../styles/footer/sitemap.less';
 import logo106 from '../../assets/image/logo.png';
+import { connect } from 'dva';
+import {routerRedux} from 'dva/router';
 
-export default function Sitemap() {
-	function renderIcon(hexcode) {
+class Sitemap extends React.Component{
+	constructor(props) {
+		super(props);
+		
+	}
+	static defaultProps = {
+		dict : {
+			"账户安全" : "\uE60A",
+			"购彩问题" : "\uE608",
+			"充提问题" : "\uE607",
+			"在线客服" : "\uE609"
+		},
+		customerService : {
+			cateName: "在线客服",
+			helpList: [
+				{
+					title: 'QQ咨询：',
+					cateId: {
+							客服1: 'http://www.baidu.com',
+							客服2: 'http://www.baidu.com',
+							客服3: 'http://www.baidu.com'
+					}
+				},
+				{
+					title: '客服电话：400-636-0000',
+					cateId: ''
+				},
+				{
+					title: '在线咨询时间：周一~周日',
+					cateId: ''
+				},
+				{
+					title: '电话咨询时间：周一~周五',
+					cateId: ''
+				},
+			]
+		}
+	}
+	renderIcon(hexcode) {
 		return <span className={css.sitemap_labelIcon}>{hexcode}</span>;
 	}
+	
+	handleHelpListItemClick(id, content){
+		let {dispatch} = this.props
+		console.log('dispatch', dispatch)
+		dispatch({type: 'homeInfoModel/updateState', payload:{id, content}})
+		dispatch(routerRedux.push({
+			pathname: 'helplist'
+		}))
+	}
 
-	function renderListItem(placeholder, permalink) {
-		const isLink = permalink && typeof permalink === 'string';
-		const linkEmpty = permalink === '';
-		
+	renderListItem(title, list, id, content) {
+		const isLink = list && typeof list === 'string';
+		const linkEmpty = list === '';
 		if (isLink && !linkEmpty) {
 			return (
-				<li className={css.sitemap_listItem} key={placeholder}>
-					<a className={css.sitemap_permalink} href={permalink}>{ placeholder } </a>
+				<li className={css.sitemap_listItem} key={title + id}>
+					<a className={css.sitemap_permalink} onClick={this.handleHelpListItemClick.bind(this, id, content)}>{ title } </a>
 				</li>
 			);
 		} else if (linkEmpty) {
-			return <li className={css.sitemap_listItem} key={placeholder}>{ placeholder }</li>;
-		} else if (typeof permalink === 'object') {
+			return <li className={css.sitemap_listItem} key={title}>{ title }</li>;
+		} else if (typeof list === 'object') {
 			const links = [];
 
-			for (const innerPlaceholder in permalink) {
-				if (permalink[innerPlaceholder]) {
-					const inlinePermalink = permalink[innerPlaceholder];
-
+			for (const innerPlaceholder in list) {
+				if (list[innerPlaceholder]) {
+					const inlinePermalink = list[innerPlaceholder];
 					links.push(
 						<a
 							className={css.sitemap_permalink__inline}
 							href={inlinePermalink}
 							key={innerPlaceholder}
+							
 						>
 							{ innerPlaceholder }
 						</a>
 					);
 				}
 			}
-			return <li className={css.sitemap_listItem} key={placeholder}>{placeholder}{links}</li>;
+			return <li className={css.sitemap_listItem} key={title}>{title}{links}</li>;
 		}
 		
 		return null;
 	}
 
-	function renderList(label, list) {
+	renderList(label, list) {
 		if (label && list) {
 			const mapList = [];
-
 			for (const listItem in list) {
 				if (list[listItem]) {
-					const { placeholder, permalink } = list[listItem];
-
+					const { title, cateId, id, content } = list[listItem];
 					mapList.push(
-						renderListItem(placeholder, permalink)
+						this.renderListItem(title, cateId, id, content)
 					);
 				}
 			}
-
 			return (
 				<Column>
 					<h3 className={css.sitemap_label}>{ label }</h3>
@@ -71,27 +115,27 @@ export default function Sitemap() {
 		return null;
 	}
 
-	function renderSitemap(sitemapData) {
-		if (sitemapData) {
-			const sitemaps = [];
-			
-			for (const mapName in sitemapData) {
-				if (sitemapData[mapName]) {
-					const { list, iconUnicode } = sitemapData[mapName];
-					
+	renderSitemap() {
+		let {helpListData, dict, customerService} = this.props
+		if (helpListData) {
+			const sitemaps = [];	
+			helpListData = helpListData.concat(customerService)	
+			helpListData.map((item, index) => {
+				let { cateName, helpList } = item;
+				let iconUnicode = dict[cateName]
+				if(dict[cateName]) {
 					sitemaps.push(
-						<Column className={css.sitemap_column} key={mapName} >
+						<Column className={css.sitemap_column} key={cateName} >
 							<div className={css.sitemap_columnBody}>
 								<Column>
-									{ renderIcon(iconUnicode) }
+									{ this.renderIcon(iconUnicode) }
 								</Column>
-								{ renderList(mapName, list) }
+								{ this.renderList(cateName, helpList) }
 							</div>
 						</Column>
 					);
 				}
-			}
-
+			})
 			return (
 				<Row>
 					{ sitemaps }
@@ -102,39 +146,40 @@ export default function Sitemap() {
 		return null;
 	}
 
-	return (
-		<Row className={css.sitemap}>
+	render() {
+		return <Row className={css.sitemap}>
 			<PageContainer className={css.sitemap_body}>
-					<Column width="25%">
-						<img src={logo106} alt="106 彩票" />
-						<Row className={css.sitemap_benefits}>
-							<p className={css.sitemap_benefit}>
-								<MDIcon iconName="checkbox-marked" className={css.sitemap_checkbox} />账户安全
-							</p>
-							<p className={css.sitemap_benefit}>
-								<MDIcon iconName="checkbox-marked" className={css.sitemap_checkbox} />
-								购彩便捷
-							</p>
-							<p className={css.sitemap_benefit}>
-								<MDIcon iconName="checkbox-marked" className={css.sitemap_checkbox} />
-								兑奖简单
-							</p>
-							<p className={css.sitemap_benefit}>
-								<MDIcon iconName="checkbox-marked" className={css.sitemap_checkbox} />
-								提款快速
-							</p>
-						</Row>
-					</Column>
-					<Column float="right">
-						{ renderSitemap(sitemapData) }
-					</Column>
+				<Column width="25%">
+					<img src={logo106} alt="106 彩票" />
+					<Row className={css.sitemap_benefits}>
+						<p className={css.sitemap_benefit}>
+							<MDIcon iconName="checkbox-marked" className={css.sitemap_checkbox} />
+							账户安全
+						</p>
+						<p className={css.sitemap_benefit}>
+							<MDIcon iconName="checkbox-marked" className={css.sitemap_checkbox} />
+							购彩便捷
+						</p>
+						<p className={css.sitemap_benefit}>
+							<MDIcon iconName="checkbox-marked" className={css.sitemap_checkbox} />
+							兑奖简单
+						</p>
+						<p className={css.sitemap_benefit}>
+							<MDIcon iconName="checkbox-marked" className={css.sitemap_checkbox} />
+							提款快速
+						</p>
+					</Row>
+				</Column>
+				<Column float="right">
+					{ this.renderSitemap() }
+				</Column>
 			</PageContainer>
 		</Row>
-	);
+	}
 }
 
-const sitemapData = {
-	账户相关: {
+const sitemapData2 = {
+	"账户安全": {
 		iconUnicode: '\uE60A',
 		list: [
 			{
@@ -155,7 +200,7 @@ const sitemapData = {
 			},
 		]
 	},
-	充值购彩: {
+	"购彩问题": {
 		iconUnicode: '\uE608',
 		list: [
 			{
@@ -176,7 +221,7 @@ const sitemapData = {
 			},
 		]
 	},
-	兑奖提款: {
+	"充提问题": {
 		iconUnicode: '\uE607',
 		list: [
 			{
@@ -223,3 +268,11 @@ const sitemapData = {
 		]
 	}
 };
+
+function mapStateToProps({homeInfoModel}){
+	const {helpListData} = homeInfoModel
+	return {helpListData}
+}
+
+
+export default connect(mapStateToProps)(Sitemap);

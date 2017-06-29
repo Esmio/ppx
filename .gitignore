@@ -12,3 +12,4 @@
 npm-debug.log*
 /math
 .idea
+.idea/workspace.xml

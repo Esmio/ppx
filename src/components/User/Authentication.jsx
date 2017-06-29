@@ -10,6 +10,7 @@ class Register extends Component {
 	constructor(props) {
 		super(props);
 		this.dispatch = this.props.dispatch.bind(this);
+		this.onModalClose = this.onModalClose.bind(this);
 	}
 	
 	componentWillMount() {
@@ -22,8 +23,17 @@ class Register extends Component {
 			]
 		});
 	}
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.authenticationState !== this.props.authenticationState) {
+			this.dispatch({ type: 'formModel/getBrowserUniqueId' });
+		}
+	}
+	
 	componentWillUnmount() {
-		this.dispatch({ type: 'userModel/initializeState', payload: ['awaitingResponse'] });
+		this.dispatch({ type:
+			'userModel/initializeState',
+			payload: ['awaitingResponse', 'authenticationState']
+		});
 		this.dispatch({
 			type: 'formModel/initializeState',
 			payload: [
@@ -43,6 +53,9 @@ class Register extends Component {
 	onSubmitClick() {
 		this.dispatch({ type: 'userModel/postRegistration' });
 	}
+	onSwapRegisterState(authenticationState) {
+		this.dispatch({ type: 'userModel/updateState', payload: { authenticationState } });
+	}
 	onLoginClick() {
 		this.dispatch({ type: 'userModel/putUserLogin' });
 	}
@@ -52,16 +65,25 @@ class Register extends Component {
 	}
 	onInputChange(event) {
 		event.persist();
+		this.dispatch({ type: 'formModel/initializeState', payload: ['responseMsg'] });
     const eventTarget = event.target;
     const { value, max, name } = eventTarget;
-    const { dispatch } = this.props;
     const payload = { [name]: { value } };
     if (`${value}`.length <= max) {
-      dispatch({
+      this.dispatch({
         type: 'formModel/updateState', payload
       });
     }
   }
+	onModalClose() {
+		this.dispatch({
+      type: 'layoutModel/updateState',
+      payload: {
+        shouldShowProfileModal: false,
+        shouldShowAuthModel: false
+      }
+    });
+	}
   validateInput(payload) {
     this.dispatch({ type: 'formModel/validateInput', payload });
   }
@@ -102,12 +124,12 @@ class Register extends Component {
 				dataIcon={icon}
 				dataMsg={inputMsg}
 				label={`${TYPE.inputFieldRefs.username}`}
-				min="6" max="12"
+				min="5" max="12"
 				name="username"
 				onBlur={this.validateUsername.bind(this)}
 				onChange={this.onInputChange.bind(this)}
-				pattern="^[A-Za-z0-9]\w{5,11}$"
-				placeholder="请输入字母和数字组成的6-12个字符"
+				pattern="^[A-Za-z0-9]\w{4,12}$"
+				placeholder="请输入字母和数字组成的5-12个字符"
 				value={value}
 			/>
 		);
@@ -169,10 +191,10 @@ class Register extends Component {
 					label={`${TYPE.inputFieldRefs.varifyCode}`}
 					min="6" max="6"
 					name="varifyCode"
-					onBlur={this.validateVarifyCode.bind(this)}
+					onBlur={this.validateInput.bind(this)}
 					onChange={this.onInputChange.bind(this)}
-					pattern="^[A-Za-z0-9]\w{6}$"
-					placeholder="请输入验证码"
+					pattern="^[0-9]\w{5}$"
+					placeholder="请输入六位数验证码"
 					value={value}
 				/>
 				<div>
@@ -218,13 +240,13 @@ class Register extends Component {
 	}
 	renderBtnRow() {
 		const {
-			userAgreed, varifyPassed, password, repeatPassword, username,
-			awaitingResponse, authenticationState
+			userAgreed, password, repeatPassword, username,
+			awaitingResponse, authenticationState, varifyCode
 		} = this.props;
 		let readyToSubmit = false;
 		if (authenticationState === 'REGISTER') {
 			readyToSubmit = 
-				username.value && userAgreed && varifyPassed 
+				username.value && userAgreed && varifyCode.value 
 				&& (password.value === repeatPassword.value);
 			return (
 				<div className={css.profile_formBtnRow}>
@@ -235,14 +257,15 @@ class Register extends Component {
 						placeholder={`马上${TYPE[authenticationState]}`}
 					/>
 					<Button
+						className={css.profile_guestRegisterBtn}
 						disabled={awaitingResponse}
 						onClick={this.onGestAccountRequest.bind(this)}
-						placeholder="免费试玩"
+						placeholder="获取试玩账号"
 					/>
 				</div>
 			);
 		} else if (authenticationState === 'LOGIN') {
-			readyToSubmit = username.value && password.value && varifyPassed;
+			readyToSubmit = username.value && password.value && varifyCode.value;
 			return (
 				<div className={css.profile_formBtnRow}>
 					<OrangeButton
@@ -255,6 +278,28 @@ class Register extends Component {
 			);
 		}
 	}
+	renderRedirectBtnRow() {
+		const { authenticationState } = this.props;
+		if (authenticationState === 'REGISTER') {
+			return (
+				<div className={css.profile_formBtnRow}>
+					<p className={css.profile_registerFooter}>
+						已有账号？
+						<a onClick={this.onSwapRegisterState.bind(this, 'LOGIN')}>点这里登录</a>
+					</p>
+				</div>
+			);
+		} else if (authenticationState === 'LOGIN') {
+			return (
+				<div className={css.profile_formBtnRow}>
+					<p className={css.profile_registerFooter}>
+						没有账号？
+						<a onClick={this.onSwapRegisterState.bind(this, 'REGISTER')}>点这里注册一个</a>
+					</p>
+				</div>
+			);
+		}
+	}
 	render() {
 		const { awaitingResponse, authenticationState } = this.props;
 		
@@ -262,6 +307,12 @@ class Register extends Component {
 			<div className={css.profile_contentBody}>
 				<h4 className={css.profile_formLabel}>
 					用户{TYPE[authenticationState]}
+					<button
+            onClick={this.onModalClose.bind(this)}
+            className={css.profile_popUpCloseBtn}
+					>
+            <i>关闭</i><MDIcon iconName="window-close" />
+          </button>
 					<LoadingBar duration="2s" isLoading={awaitingResponse} />
 				</h4>
 				{ this.renderUsernameInput() }
@@ -271,6 +322,7 @@ class Register extends Component {
 				{ this.renderAgreementCheckbox() }
 				{ this.renderResponseMsg() }
 				{ this.renderBtnRow() }
+				{ this.renderRedirectBtnRow() }
 			</div>
 		);
 	}

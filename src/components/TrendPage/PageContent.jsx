@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './PageContent.less';
 import {routerRedux} from 'dva/router';
+import {hasTrendChart} from '../../utils';
 
 class PageContent extends React.Component{
 	constructor(props) {
@@ -50,33 +51,6 @@ class PageContent extends React.Component{
 			['HF_CQKL10F', 'HF_GDKL10F', 'HF_TJKL10F']
 		]
 	}
-	hasTrendChart(id){
-		switch (id) {
-            case 'HF_CQSSC' :
-            case 'HF_XJSSC' :
-            case 'HF_TJSSC' :
-            case 'HF_JXSSC' :
-            case 'HF_LFSSC' :
-            case 'HF_SHD11' :
-            case 'HF_GDD11' :
-            case 'HF_JXD11' :
-            case 'HF_SDD11' :
-            case 'HF_AHD11' : 
-            case 'X3D' : 
-            case 'HF_SHSSL' : 
-            case 'PL3' :
-            case 'HF_AHK3':
-            case 'HF_JSK3':
-            case 'HF_GXK3': {
-                return true
-                break;
-            }
-            default : {
-            	return false
-            	break;
-            }
-        }
-	}
 	handleButtonClick(e){
 		let {index} = e.target.dataset
 		this.setState({buttonIndex: index})
@@ -87,8 +61,7 @@ class PageContent extends React.Component{
 			e.target = e.target.parentNode
 		}
 		let {id} = e.target.dataset
-		let hasTrendChart = this.hasTrendChart(id)
-		if(!hasTrendChart) return false
+		if(!hasTrendChart(id)) return false
 		console.log('id', id);
 		dispatch(routerRedux.push({
 			pathname: 'trend',
@@ -130,9 +103,8 @@ class PageContent extends React.Component{
 			})
 		}
 		let nodes = curButtons.map((id, index)=>{
-			let hasTrendChart = this.hasTrendChart(id)
-			let backgroundColor = hasTrendChart ? '' : '#ccc'
-			return hasTrendChart ? <button className={styles.lotto} key={id} data-id={id} disabled={!hasTrendChart} style={{backgroundColor}} onClick={this.handleLottoClick}>{lotteryName[id]}</button> : null
+			let backgroundColor = hasTrendChart(id) ? '' : '#ccc'
+			return hasTrendChart(id) ? <button className={styles.lotto} key={id} data-id={id} disabled={!hasTrendChart(id)} style={{backgroundColor}} onClick={this.handleLottoClick}>{lotteryName[id]}</button> : null
 		})
 		return nodes
 	}
@@ -148,11 +120,10 @@ class PageContent extends React.Component{
 		let {lotteryName, lotteryIcon, lotteryIconGray} = this.LotteryDict();
 		let curLotto = buttonsClasses[i];
 		let nodes = curLotto.map((id, index)=>{
-			let hasTrendChart = this.hasTrendChart(id)
-			let icon = hasTrendChart ? lotteryIcon[id] : lotteryIconGray[id]
-			return hasTrendChart ? <div className={styles.iconItem} key={id} data-id={id} onClick={this.handleLottoClick}>
+			let icon = hasTrendChart(id) ? lotteryIcon[id] : lotteryIconGray[id]
+			return hasTrendChart(id) ? <div className={styles.iconItem} key={id} data-id={id} onClick={this.handleLottoClick}>
 				<img className={styles.icon} src={icon} alt={lotteryName[id]}/>
-				<span className={styles.iconName} style={{color: hasTrendChart ? '' : '#aaa'}}>{lotteryName[id]}</span>
+				<span className={styles.iconName} style={{color: hasTrendChart(id) ? '' : '#aaa'}}>{lotteryName[id]}</span>
 			</div> : null
 		})
 		return nodes

@@ -27,36 +27,32 @@ class Login extends Component {
     });
   }
   renderAuth() {
-    const { userData, shouldShowAuthModel } = this.props;
+    const { userData } = this.props;
     if (userData) {
       return (
         <div className={css.login_body}>
-          <div className={css.login_QuickAccessRow}>
-            <UserQuickAccessBar />
-          </div>
-        </div>
-      );
-    } else if (!shouldShowAuthModel) {
-      return (
-        <div className={css.login_body}>
-          <div style={{ float: 'right', marginTop: '0.5rem' }}>
-            <OrangeButton
-              onClick={this.onAuthModalClick.bind(this, 'LOGIN')}
-              placeholder="登录"
-              className={css.login_button}
-              type="submit"
-            />
-            <OrangeButton
-              onClick={this.onAuthModalClick.bind(this, 'REGISTER')}
-              placeholder="注册"
-              className={css.login_button}
-              type="button"
-            />
-          </div>
+          <UserQuickAccessBar
+            username={userData.username} profileModalTrigger={this.onShowProfileClick.bind(this)}
+          />
         </div>
       );
     }
-    return null;
+    return (
+      <div className={css.login_body}>
+        <OrangeButton
+          onClick={this.onAuthModalClick.bind(this, 'LOGIN')}
+          placeholder="登录"
+          className={css.login_button}
+          type="submit"
+        />
+        <OrangeButton
+          onClick={this.onAuthModalClick.bind(this, 'REGISTER')}
+          placeholder="注册"
+          className={css.login_button}
+          type="button"
+        />
+      </div>
+    );
   }
   render() {
     return this.renderAuth();

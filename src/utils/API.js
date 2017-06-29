@@ -1,7 +1,7 @@
 const clientID = 31;
 
 export const checkIpInfo = '/api/v1/update/checkIpInfo';
-export const gameSetting = `/api/v1/adminsettings/user/gamessettings/${clientID}`;
+export const gameSetting = `/api/v1/adminsettings/user/prizeSettings?clientId=${clientID}`;
 
 export const homeInfo = `/api/v1/cms/internal/mobile/${clientID}/contents`;
 export const updateVersion = '/api/v1/cms/internal/lastVersion';
@@ -17,10 +17,14 @@ export const validatePic = '/api/v1/account/webapi/account/validateCode/validate
 export const changePwd = '/api/v1/account/webapi/account/users/change/password';
 export const updateRealName = '/api/v1/account/webapi/account/users/updateRealName';
 export const updateUserInfo = '/api/v1/account/webapi/account/users';
+export const createDownline = updateUserInfo;
 export const updateBankInfo = '/api/v1/account/webapi/account/users/register_info';
 export const register = '/api/v1/account/webapi/account/users/register';
 export const registerGuest = '/api/v1/account/webapi/account/users/registerGuest';
+export const webRegisterGuest = '/api/v1/account/webapi/account/users/webRegisterGuest';
+export const webRegister = '/api/v1/account/webapi/account/users/userWebRegister';
 export const login = '/api/v1/account/webapi/account/users/login';
+export const webLogin = '/api/v1/account/webapi/account/users/webLogin';
 export const loginHistory = '/api/v1/account/webapi/account/users/loginHistory';
 export const userInfo = '/api/v1/account/webapi/account/users/current';
 export const userId = '/api/v1/account/webapi/account/users/chekcUserId';
@@ -45,5 +49,14 @@ export const orderDetail = '/api/v1/orderdata/me/orders/findByTimeuuid';
 export const findTopWinners = `/api/v1/orderdata/me/orders/findTopWinners?clientId=${clientID}`;
 
 export const balanceHistory = '/api/v1/balance/me/history';
-export const transactionDetails = '/api/v1/balance/me/details';
-export const userBalance = '/api/v1/balance/me';
+export const myCashFlow = '/api/v1/balance/me/details';
+export const userBalance = '/api/v1/balance/me/balance/details';
+export const myCommissions = '/api/v1/balance/me/commissions';
+export const commissionDetail = '/api/v1/balance/me/commissions/details';
+
+export const memberList = '/api/v1/account/webapi/team/users/list';
+export const affCodeList = '/api/v1/account/webapi/team/affiliates/list';
+export const affCode = '/api/v1/account/webapi/team/affiliates';
+export const affCodeUrl = '/api/v1/account/webapi/team/affiliates/affCode';
+
+export const helpList = `api/v1/cms/internal/helpList/${clientID}`;

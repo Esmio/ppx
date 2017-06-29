@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import { connect } from 'dva';
 import moment from 'moment';
-import { Row, Column } from '../General';
+import { EllipsisLoader } from '../General';
 import css from '../../styles/homepage/history.less';
-import lessVar from '../../styles/variables.less';
-import { addCommas, stripUnit } from '../../utils';
+import { addCommas } from '../../utils';
+import {routerRedux} from 'dva/router';
+import {hasTrendChart} from '../../utils';
 
 class History extends Component {
 	constructor(props) {
@@ -31,16 +32,6 @@ class History extends Component {
 			});
 		}
 	}
-	
-	getDOMHeight(name, DOM) {
-		const { dispatch } = this.props;
-		if (DOM) {
-			dispatch({
-				type: 'layoutModel/getDOMHeight',
-				payload: { name, height: DOM.offsetHeight }
-			});
-		}
-  }
 
 	storeAnnoucement({ allHistory }) {
 		const newHistories = [];
@@ -48,37 +39,38 @@ class History extends Component {
 			const {
 				gameNameInChinese,
 				openTime,
+				gameUniqueId,
 				openCode,
 				uniqueIssueNumber
 			} = history;
 			newHistories.push(
-				<Row
+				<li
 					key={gameNameInChinese + uniqueIssueNumber}
 					className={css.history_listItem}
 				>
-					<Row>
-						<Row>
+					<div>
+						<div>
 							<p className={css.history_lotName}>{gameNameInChinese}</p>		
 							<p className={css.history_lotDate}>
 								{moment(openTime).format('YYYY-MM-DD')}
 							</p>
-						</Row>
+						</div>
 						<p className={css.history_lotPhase}>
 							<span>第{addCommas(uniqueIssueNumber)}期</span> 
 						</p>
-					</Row>
-					{ this.renderLotBalls(openCode) }
-					<Row>
-						<Column float="right">
-							<p>
-								<a href="" className={css.history_permalink}>奖金计算器</a>
-								<a href="" className={css.history_permalink}>详情</a>
-								<a href="" className={css.history_permalink}>走势</a>
-								<a href="" className={css.history_permalink}>投注</a>
-							</p>
-						</Column>
-					</Row>
-				</Row>
+					</div>
+					{ 
+						openCode ?
+						this.renderLotBalls(openCode) : 
+						<p className={css.history_awaitMsg}>正在开奖 <EllipsisLoader duration={5000} /></p>
+					}
+					<p className={css.history_permalinks}>
+						<a href="" className={css.history_permalink}>奖金计算器</a>
+						<a href="" className={css.history_permalink}>详情</a>
+						{hasTrendChart(gameUniqueId) ? <a href={`${location.href}trend?gameUniqueId=${gameUniqueId}`} className={css.history_permalink}>走势</a> : null}
+						<a href="" className={css.history_permalink}>投注</a>
+					</p>
+				</li>
 			);
 		}, this);
 		return newHistories;
@@ -95,58 +87,24 @@ class History extends Component {
 			</p>
 		);
 	}
-	renderHistories(histories) {
-		function renderItem() {
-			return histories.map((history) => {
-				// console.debug(history);
-
-				return (history);
-			});
-		}
-		return renderItem;
-	}
-	renderScene(histories) {
-		const historyMargin = (stripUnit(lessVar.size2) * 2) * stripUnit(lessVar.baseSize);
-		const { centerPanelHeight, 
-		offsetHeight,
-		QRPanelHeight,
-		tutorialListHeight,
-		lotteryNoticeHeaderHeight } = this.props;
-		const maxHeight = 
-		centerPanelHeight - 
-		offsetHeight -
-		QRPanelHeight -
-		tutorialListHeight -
-		lotteryNoticeHeaderHeight -
-		historyMargin;
-		// offsetHeight,
-		// QRPanelHeight,
-		// tutorialListHeight,
-		// lotteryNoticeHeaderHeight, historyMargin, maxHeight);
-		return (
-			<Row>
-				<div ref={DOM => this.getDOMHeight('lotteryNoticeHeader', DOM)}>
-					<Row>
-						<Column width="80%">
-							<h4 className={css.history_header}>开奖公告</h4>
-						</Column>
-						<Column width="20%">
-							<h3 className={css.history_btn__loadMore}>更多</h3>
-						</Column>
-					</Row>
-				</div>
-				<Column className={css.history_list} width="100%" style={{ height: `${maxHeight}px` }}>
-					{ histories }
-				</Column>
-			</Row>
-		);
+	handleMoreClick(){
+		const {dispatch} = this.props;
+		dispatch(routerRedux.push({
+			pathname: 'award'
+		}))
 	}
 	render() {
 		const { histories } = this.state;
 		return (
-			<Row className={css.history_panel}>
-				{ histories && this.renderScene(histories) }
-			</Row>
+			<div className={css.history_panel}>
+				<div className={css.history_headers}>
+					<h4 className={css.history_header}>开奖公告</h4>
+					<h3 className={css.history_btn__loadMore} onClick={this.handleMoreClick.bind(this)}>更多</h3>
+				</div>
+				<div className={css.history_list}>
+					{ histories }
+				</div>
+			</div>
 		);
 	}
 }

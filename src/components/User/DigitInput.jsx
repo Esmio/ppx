@@ -119,6 +119,10 @@ class DigitInput extends Component {
           style={{ color: dataColor }}          
         >
           <span>{label}</span>
+          {
+            disabled || readOnly ?
+            <MDIcon iconName="pencil-lock" className={css.profile_readOnlyIcon} /> : null
+          }
           { this.renderIndicateMsg() }
         </label>
         <span

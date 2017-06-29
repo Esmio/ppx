@@ -107,7 +107,14 @@ class ProfileInput extends Component {
     const { inputOnFocus } = this.state;
     
     if (renderOptions && inputOnFocus) {
-      return renderOptions();
+      return (
+        <div
+          className={css.profile_select}
+          onClick={this.onDropdownClick.bind(this)}
+        >
+          { renderOptions() }
+        </div>
+      );
     }
   }
   renderDateIcon() {
@@ -122,6 +129,7 @@ class ProfileInput extends Component {
       placeholder, readOnly, value, type, width,
       style, disabled
     } = this.props;
+    const notEditable = disabled || readOnly;
     // const { inputXIndex, inputYIndex, inputWidth } = this.state;
     // const style = { width: inputWidth, top: inputYIndex, left: inputXIndex };
     return (
@@ -133,9 +141,13 @@ class ProfileInput extends Component {
       >
         <label
           htmlFor={name} className={css.profile_inputLabel}
-          style={{ color: dataColor }}          
+          style={{ color: notEditable ? '' : dataColor }}          
         >
           <span>{label}</span>
+          {
+            notEditable ?
+            <MDIcon iconName="pencil-lock" className={css.profile_readOnlyIcon} /> : null
+          }
           { this.renderIndicateMsg() }
         </label>
         { this.renderDateIcon() }
@@ -152,14 +164,9 @@ class ProfileInput extends Component {
           onChange={event => this.onInputChange(event)}
           onFocus={event => this.onInputFocus(event)}
           ref="input"
-          style={{ ...style, borderColor: dataColor }}
+          style={{ ...style, borderColor: notEditable ? '' : dataColor }}
         />
-        <div
-          className={css.profile_select}
-          onClick={this.onDropdownClick.bind(this)}
-        >
-          { this.renderDropdown() }
-        </div>
+        { this.renderDropdown() }
         { this.renderIndicateLength() }
       </div>
     );

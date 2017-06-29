@@ -11,7 +11,7 @@ gameCalculation[type.SINGLE] = {
   calculate({ picksLength }) {
     this.init.call(this);
     this.picksLength = picksLength;
-    // console.debug(picksOnGame);
+    // console.debug(thisBetObj);
     _.forEach(picksLength, (length) => {
       // console.debug(length);
       this.total += length;
@@ -24,12 +24,12 @@ gameCalculation[type.SINGLE] = {
 
 gameCalculation[type.BUNDLE] = {
   init() { this.total = 0; },
-  calculate({ picksOnGame, setIsFulFilled }) {
+  calculate({ thisBetObj, setIsFulFilled }) {
     this.init.call(this);
-    this.picksOnGame = picksOnGame;
+    this.thisBetObj = thisBetObj;
     this.setIsFulFilled = setIsFulFilled;
     if (this.setIsFulFilled) {
-      _.forEach(this.picksOnGame, () => {
+      _.forEach(this.thisBetObj, () => {
         this.total++;
       });
     }
@@ -44,16 +44,16 @@ gameCalculation[type.SUM] = {
     this.total = 0;
   },  
   calculate(
-    { picksOnGame, valueRef, openOptionsOnGame, uniqueInt, setIsFulFilled }
+    { thisBetObj, valueRef, openOptionsOnGame, uniqueInt, setIsFulFilled }
   ) {
     this.init.call(this);
     this.openOptionsOnGame = openOptionsOnGame;
-    this.picksOnGame = picksOnGame;
+    this.thisBetObj = thisBetObj;
     this.setIsFulFilled = setIsFulFilled;
     this.uniqueInt = uniqueInt;
     this.valueRef = valueRef;
     if (this.setIsFulFilled) {
-      _.forEach(this.picksOnGame, (picks) => {
+      _.forEach(this.thisBetObj, (picks) => {
         // console.debug(picks);
         const picksInValue = _.map(picks, (pick) => {
           if (_.isNumber(pick)) {
@@ -205,15 +205,15 @@ gameCalculation[type.GROUP_PICK_4] = {
     this.total = 0;
   },
   calculate({
-    picksOnGame, picksLength, pickRange, openOptionsOnGame, setIsFulFilled, uniqueInt
+    thisBetObj, picksLength, pickRange, openOptionsOnGame, setIsFulFilled, uniqueInt
   }) {
     this.init.call(this);
-    this.picksOnGame = picksOnGame;
-    this.picksKeys = _.keys(picksOnGame);
+    this.thisBetObj = thisBetObj;
+    this.picksKeys = _.keys(thisBetObj);
     this.openOptionsOnGame = openOptionsOnGame;
     this.setIsFulFilled = setIsFulFilled;
-    this.firstRowPicks = this.picksOnGame[this.picksKeys[0]];
-    this.secondRowPicks = this.picksOnGame[this.picksKeys[1]];
+    this.firstRowPicks = this.thisBetObj[this.picksKeys[0]];
+    this.secondRowPicks = this.thisBetObj[this.picksKeys[1]];
     this.firstLength = picksLength[0];
     this.secondLength = picksLength[1];
     this.uniqueInt = uniqueInt;
@@ -342,11 +342,11 @@ gameCalculation[type.COMBO_DUPLEX] = {
 
 gameCalculation[type.TOP_TWO_BET] = {
   init() { this.total = 0; },
-  calculate({ picksOnGame, setIsFulFilled }) {
+  calculate({ thisBetObj, setIsFulFilled }) {
     this.init.call(this);
-    this.pickKeys = _.keys(picksOnGame);
-    this.firstRowPicks = picksOnGame[this.pickKeys[0]];
-    this.secondRowPicks = picksOnGame[this.pickKeys[1]];
+    this.pickKeys = _.keys(thisBetObj);
+    this.firstRowPicks = thisBetObj[this.pickKeys[0]];
+    this.secondRowPicks = thisBetObj[this.pickKeys[1]];
     this.setIsFulFilled = setIsFulFilled;
     if (this.setIsFulFilled) {
       this.intersectLength = ArrayUtil.intersect(this.firstRowPicks, this.secondRowPicks).length;
@@ -361,13 +361,13 @@ gameCalculation[type.TOP_TWO_BET] = {
 
 gameCalculation[type.TOP_THREE_BET] = {
   init() { this.total = 0; },
-  calculate({ picksOnGame, setIsFulFilled }) {
+  calculate({ thisBetObj, setIsFulFilled }) {
     this.init.call(this);
-    this.picksOnGame = picksOnGame;
-    this.pickKeys = _.keys(this.picksOnGame);
-    this.firstRowPicks = this.picksOnGame[this.pickKeys[0]];
-    this.secondRowPicks = this.picksOnGame[this.pickKeys[1]];
-    this.thirdRowPicks = this.picksOnGame[this.pickKeys[2]];
+    this.thisBetObj = thisBetObj;
+    this.pickKeys = _.keys(this.thisBetObj);
+    this.firstRowPicks = this.thisBetObj[this.pickKeys[0]];
+    this.secondRowPicks = this.thisBetObj[this.pickKeys[1]];
+    this.thirdRowPicks = this.thisBetObj[this.pickKeys[2]];
     this.setIsFulFilled = setIsFulFilled;
     if (this.setIsFulFilled) {
       _.forEach(this.firstRowPicks, (firstRowNum) => {

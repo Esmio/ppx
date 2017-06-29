@@ -12,7 +12,7 @@
   font-size: @size-1;
 }
 .login_button {
-  margin-right: @size-0;
+  margin-left: @size-0;
   float: right;
 }
 .login_icon__input {
@@ -50,8 +50,6 @@
 .login_userInfo {
   width: 100%;
   position: relative;
-
-
   margin-right: @size-3;
 }
 .login_userInfoContent {
@@ -102,4 +100,26 @@
   color: @text-gray;
   font-size: @size-1;
   padding-right: @size-3;
+}
+.quickAccessBar {
+  .clearfix;
+  align-content: center;
+  background-color: @base-white;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+.quickAccessBarBtn {
+  height: @button-height;
+  padding: 0 @size-0;
+  font-size: @size-2;
+  padding: 0 0 0 @size-3;
+
+  i {
+    margin-right: @size-0;
+    font-size: @size-4;
+  }
+  i, span {
+    vertical-align: middle;
+  }
 }

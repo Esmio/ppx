@@ -1,24 +1,31 @@
 @import "../variables.less";
 @import "../general/layout.less";
 @import "./homepageBody.less";
-@import "./lotteryTabs.less";
+@import "./quickBet.less";
 
 .history_panel {
 	.homePage_panel;
 	padding: 0;
-	overflow: auto;
-	float: none;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
 }
-
+.history_headers {
+	.clearfix;
+}
 .history_header {
 	.homePage_panelHeader;
-	padding: @size-0;
+	padding: @size-0 @size-0 0 @size-0;
+	float: left;
 }
 
 .history_btn__loadMore {
 	.history_header;
 	text-align: right;
-	font-weight: initial
+	font-weight: initial;
+	float: right;
+	cursor: pointer;
+	user-select: none;
 }
 .history_text {
 	font-size: @size-2;
@@ -35,7 +42,6 @@
 	width: 50%;
 	font-size: @size-2;
 	font-weight: 600;
-	color: @label-blue;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -50,37 +56,44 @@
 .history_lotPhase {
 	font-size: @size-1;
 	color: @text-black;
-	margin-bottom: @size-1;
+	margin-bottom: @size-0;
+}
+.history_awaitMsg {
+	font-size: @size-2;
+	margin-bottom: @size-0;
 }
 .history_listItem {
 	padding: @size-0;
 	border-top: 1px dashed @border;
 }
 .history_list{
+	.clearfix;
+	display: block;
 	overflow-y: scroll;
 	transition: height 0.3s ease-in-out;
+}
+.history_permalinks {
+	margin-top: @size-0;
 }
 .history_permalink {
 	.history_lotPhase;
 	margin-left: @size-0;
 	padding-left: @size-0;
-	color: inherit;
 	border-left: 1px solid @border;
 }
 
 .history_numbers {
-	.ellipsis;
-	.row;
-	overflow-x: auto;
-	display: block;
 	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
 }
 
 .history_number {
-	.lotteryTab_contentsNumber;
+	.quickBet_contentsNumber__history;
+	margin-right: @size-0 / 2;
 	font-size: @size-1;
 	height: 20px;
-	width: 20px;
+	min-width: 20px;
 	line-height: 20px;
-	margin-bottom: 0;
+	margin-bottom: @size-0;
 }

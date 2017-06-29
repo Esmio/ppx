@@ -1,0 +1,56 @@
+@import '../../../styles/variables.less';
+@import '../../../styles/general/layout.less';
+
+.gameNav {
+  display: flex;
+  flex-direction: column;
+  background-color: @playground-gray;
+  color: @base-white;
+  font-size: @size-2;
+}
+.gameNav_btns {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.gameNav_btn {
+  padding: @size-0 @size-3;
+  &[data-active=true] {
+    color: @light-orange;
+  }
+  &[disabled] {
+    cursor: default;
+  }
+}
+.gameSubnavs {
+  display: flex;
+  flex-direction: column;
+  font-size: @size-2;
+}
+.gameSubnav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: @size-0;
+  padding: 0 @size-3;
+}
+.gameSubnav_label {
+  color: @text-gray;
+}
+.gameSubnav_chevron {
+  font-size: @size-4;
+  margin: 0 @size-0;
+  vertical-align: middle;
+}
+.gameSubnav_btn {
+  height: @button-height;
+  border-radius: 6px;
+  background-color: @base-white;
+  color: @text-gray;
+  padding: 0 @size-3;
+  margin-right: @size-0;
+  &[data-active=true] {
+    background-color: @playground-gray;
+    color: @light-orange;
+  }
+}

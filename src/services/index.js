@@ -1,11 +1,13 @@
 import * as apiRequest from './apiRequest';
-import * as gameRules from './gameRules';
+import * as betService from './betCenter';
 import * as validate from './validation';
 import { gameCalculation } from './gameCalculation';
+import { getNumbersOfUnits } from './getNumberOfUnits';
 
 export {
   apiRequest,
-  gameRules,
+  betService,
   gameCalculation,
-  validate
+  validate,
+  getNumbersOfUnits
 };

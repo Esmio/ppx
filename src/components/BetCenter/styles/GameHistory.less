@@ -1,0 +1,95 @@
+@import '../../../styles/variables.less';
+@import './RatioCtrl.less';
+
+.gameHistory {
+  .ratioCtrl;
+  flex: 1;
+}
+
+.gameHistory_table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  border-radius: 6px;
+  font-size: @size-1;
+}
+.gameHistory_tableCell {
+  text-align: left;
+  display: inline-block;
+  color: @text-black;
+  line-height: @size-5;
+  background-color: @base-white;
+  padding: 0 @size-0 / 2;
+  width: 33.3%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+
+  &:last-child {
+    text-align: right;
+  }
+  &:only-child {
+    width: 100%;
+    text-align: center;
+  }
+  &[data-state=WIN] {
+    color: @accent-teal;
+  }
+}
+.gameHistory_tableBodyRow {
+  display: flex;
+  flex-direction: row;
+
+  &:nth-child(even) {
+    .gameHistory_tableCell {
+      background-color: @bg-gray;
+    }
+  }
+}
+.gameHistory_tableHeadRow {
+  display: flex;
+  flex-direction: row;
+
+  .gameHistory_tableCell {
+    color: @base-white;
+    color: rgba(255, 255, 255, 0.6);
+    background-color: @label-blue;
+  }
+}
+.gameHistory_tableBody {
+  max-height: @size-5 * 9;
+  overflow: auto;
+  transition: max-height 0.15s @transition-timing;
+
+  &[data-collapse=true] {
+    max-height: 0;
+  }
+}
+.gameHistory_tableFooterRow {
+  .gameHistory_tableBodyRow;
+  .gameHistory_tableCell:nth-child(2) {
+    text-align: center;
+  }
+}
+.gameHistory_tableFooterBtn {
+  line-height: @size-5;
+  i { vertical-align: middle; }
+  [class*=mdi] {
+    line-height: 1;
+    font-size: @size-3;
+    margin-right: @size-0 / 2;
+    display: inline-block;
+  }
+}
+.gameHistory_tableChevronBtn {
+  .gameHistory_tableFooterBtn;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+  &[data-collapse=true] {
+    transform: rotate(180deg) translate(-50%, -50%);;
+  }
+}

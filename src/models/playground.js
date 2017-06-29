@@ -41,6 +41,13 @@ export default {
 	namespace: 'playgroundModel',
 	state: INITIAL_STATE,
 	reducers: {
+		updateState(state, { payload }) {
+      return { ...state, ...payload };
+    },
+    initializeState(state, { payload }) {
+      const initialStates = _.pick(INITIAL_STATE, payload);
+      return { ...state, ...initialStates };
+    },
 		putGameboardToLoading(state) {
 			return { ...state, GameboardDoneLoading: false };
 		},
@@ -196,7 +203,7 @@ export default {
 				...state,
 				submissionSuccess: false,
 				submissionFailed: true,
-				submissionIsLoading: false,				
+				submissionIsLoading: false,
 				submitButtonIcon: 'close-outline',
 				submitButtonText: payload,
 				submitButtonClass: 'gameboard_cartConfirmBtn__error'
@@ -214,7 +221,7 @@ export default {
 				type: 'updateSingleInfoSuccess',
 				payload: { key: 'existingBetAmount', value: newPicks }
 			});
-			yield put({ type: 'calculateBet' });			
+			yield put({ type: 'calculateBet' });
 		},
 		*addExistingPicks({ payload }, { put, select }) {
 			const { existingPicks, selectedGameSetting } = yield select(state => state.playgroundModel);
@@ -228,7 +235,7 @@ export default {
 				type: 'updateSingleInfoSuccess',
 				payload: { key: 'existingPicks', value: newPicks }
 			});
-			yield put({ type: 'calculateBet' });			
+			yield put({ type: 'calculateBet' });
 		},
 		*addRandomPicks({ payload }, { put, select }) {
 			const {
@@ -266,7 +273,7 @@ export default {
 				type: 'updateSingleInfoSuccess',
 				payload: { key: 'existingMultiply', value: newMultiply }
 			});
-			yield put({ type: 'calculateBet' });			
+			yield put({ type: 'calculateBet' });
 		},
 		*addReturnRatio({ payload }, { select, put }) {
 			const {
@@ -322,14 +329,14 @@ export default {
 				}
 			};
 			yield put({ type: 'addItemToCartSuccess', payload: item });
-			yield put({ type: 'calculateBet' });		
+			yield put({ type: 'calculateBet' });
 		},
 		*calculateBet({ payload }, { put, select }) {
 			const playgroundModel = yield select(state => state.playgroundModel);
 			const calculateDetails = yield gameRules.getCalculateDetails(playgroundModel);
-			
+
 			yield put({
-				type: 'updateMultipleInfosSuccess', 
+				type: 'updateMultipleInfosSuccess',
 				payload: calculateDetails
 			});
 		},
@@ -338,14 +345,14 @@ export default {
 			const { selectedGameName } = yield select(state => state.playgroundModel);
 			const response = yield call(request.getCurrentResults.bind(this, lotUniqueId));
 			const { data, err } = response;
-			
+
 			if (data) {
 				yield put({
 					type: 'updateSingleInfoSuccess',
 					payload: { key: 'selectedLotResult', value: data }
 				});
 			} else if (err) {
-				throw new Error(err.message);				
+				throw new Error(err.message);
 			} else if (!err && !data) {
 				console.debug('获取游戏成绩 payload', payload);
 			}
@@ -370,7 +377,7 @@ export default {
 				}
 			});
 			yield put({ type: 'storeNavOptions', payload: lotUniqueId });
-			yield put({ 
+			yield put({
 				type: 'getSelectedLotResults',
 				payload: { lotUniqueId }
 			});
@@ -381,7 +388,7 @@ export default {
 			yield put({ type: 'storeNavOptionsSuccess', payload: newNavOptions });
 		},
 		*selectNav({ payload }, { put }) {
-			yield put({ type: 'putGameboardToLoading' });			
+			yield put({ type: 'putGameboardToLoading' });
 			const { selectedGameName, selectedGameSetting } = INITIAL_STATE;
 			const { selectedNav, subNavOptions } = payload;
 			yield put({
@@ -397,7 +404,7 @@ export default {
 			const {
 				selectedLotSettings, selectedLotUniqueId, existingOpenOptions, cart
 			} = yield select(state => state.playgroundModel);
-			const selectedGameSetting = yield gameRules.getSingleGameSetting({ 
+			const selectedGameSetting = yield gameRules.getSingleGameSetting({
 				selectedLotUniqueId, selectedGameName
 			});
 			const { gameSetCombination } = selectedGameSetting;
@@ -445,7 +452,7 @@ export default {
 			newMultiply[payload] = 1;
 			newReturnRatio[payload] = 0;
 			newPrizeAmount[payload] = 0;
-			
+
 			yield put({
 				type: 'updateMultipleInfosSuccess',
 				payload: {
@@ -456,7 +463,7 @@ export default {
 					exisitingPrizeAmount: newPrizeAmount
 				}
 			});
-			yield put({ type: 'calculateBet' });			
+			yield put({ type: 'calculateBet' });
 		},
 		*removeCartItem({ payload }, { put, select }) {
 			const { cart } = yield select(state => state.playgroundModel);
@@ -504,7 +511,7 @@ export default {
 
 			const response = yield call(request.putOrder.bind(this, { order, accessToken }));
 			const { data, err } = response;
-			
+
 			if (data) {
 				yield put({ type: 'submitCartSuccess' });
 				yield put({ type: 'initializeGame', payload: selectedGameName });
@@ -515,9 +522,9 @@ export default {
 			} else if (err.status === 401) {
 				yield put({ type: 'submitCartFailed', payload: '请先登入，再进行投注' });
 			} else if (err) {
-				yield put({ type: 'submitCartFailed', payload: err.message });				
+				yield put({ type: 'submitCartFailed', payload: err.message });
 			} else {
-				yield put({ type: 'submitCartFailed', payload: '投注异常，请联系客服' });				
+				yield put({ type: 'submitCartFailed', payload: '投注异常，请联系客服' });
 				console.error('投注异常', order);
 			}
 		}

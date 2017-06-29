@@ -10,10 +10,7 @@ export function getTopWinners() {
 export function getAllHistory() {
   return request(API.allHistory);
 }
-export function getMyDetails({ accessToken }) {
-	return request(`${API.transactionDetails}?access_token=${accessToken}`);
-}
-export function getLoginHistory({ accessToken }) {
+export function getMyLoginHistory({ accessToken }) {
   return request(`${API.loginHistory}?pageSize=20&access_token=${accessToken}`);
 }
 export function getAllGamesSetting() {
@@ -27,6 +24,9 @@ export function checkUserId(username) {
 }
 export function getCurrentUser(accessToken) {
 	return request(`${API.userInfo}?access_token=${accessToken}`);
+}
+export function getHelpList() {
+	return request(API.helpList);
 }
 export function getCardsAndWithdrawDetail({ accessToken }) {
   return request(`${API.userBanksAccount}?access_token=${accessToken}`);
@@ -53,7 +53,22 @@ export function getValidatePic({ varifyCode, webUniqueCode }) {
 		`${API.validatePic}?validateCode=${varifyCode.value}&webUniqueCode=${webUniqueCode}`
 	);
 }
-export function getOrderHistory({ accessToken }, { state, pageSize }) {
+export function getCommissionDetail(userModel, dataTableModel) {
+	const { accessToken, taskIdentifier } = userModel;
+	const { pageSize } = dataTableModel;
+	const url = [
+		API.commissionDetail,
+		`?pageSize=${pageSize * 10}`,
+		`&currentPage=1`,
+		`&access_token=${accessToken}`,
+		`&taskIdentifier=${taskIdentifier}`
+	];
+	return request(_.join(url, ''));
+}
+export function getOrderHistory({ userModel, dataTableModel, orderModel }) {
+	const { accessToken } = userModel;
+	const { pageSize } = dataTableModel;
+	const { state } = orderModel;
 	const url = [
 		API.orderHistory,
 		`?pageSize=${pageSize * 10}`,
@@ -65,9 +80,23 @@ export function getOrderHistory({ accessToken }, { state, pageSize }) {
 	}
 	return request(_.join(url, ''));
 }
-export function getTransactionHistory({ accessToken }, {
-	state, pageSize, currentPage, type, subType,
-}) {
+export function getMemberList({ userModel, dataTableModel, teamModel }) {
+	const { accessToken } = userModel;
+	const { pageSize } = dataTableModel;
+	const { agentId, usernameSearchString } = teamModel;
+	const url = [
+		API.memberList,
+		`?pageSize=${pageSize * 10}`,
+		`&access_token=${accessToken}`
+	];
+	if (agentId) { url.push(`&agentId=${agentId}`); }
+	if (usernameSearchString) { url.push(`&username=${usernameSearchString}`); }
+	return request(_.join(url, ''));
+}
+export function getTransactionHistory({ userModel, dataTableModel, transactionModel }) {
+	const { accessToken } = userModel;
+	const { pageSize, currentPage } = dataTableModel;
+	const { type, subType, state } = transactionModel;
 	const url = [
 		API.transactionHistory,
 		`?pageSize=${pageSize * 10}`,
@@ -85,32 +114,27 @@ export function getTransactionHistory({ accessToken }, {
 	}
 	return request(_.join(url, ''));
 }
-
-export function putOrder({ order, accessToken }) {
-  const body = JSON.stringify(order);
-  // console.debug(body);
-  return request(API.ordercap, {
-    method: "post",
-    headers: {
-      'content-type': "application/json",
-      Authorization: `bearer ${accessToken}`
-    },
-    body
-  });
-}
-export function putUserLogin({ username, password }) {
+export function putUserLogin({ username, password, varifyCode, webUniqueCode }) {
 	return awaitHash(username.value, password.value).then((hash) => {
-		return request(API.login, {
+		return request(API.webLogin, {
 			method: 'post',
 			headers: {
 				'content-type': 'application/json'
 			},
-			body: JSON.stringify({ hash, password: password.value, username: username.value })
+			body: JSON.stringify({
+				hash,
+				password: password.value,
+				username: username.value,
+				validateCode: varifyCode.value,
+				wap: true,
+				webUniqueCode
+			})
 		});
 	});
 }
 export function putUserInfo({ accessToken }, {
-	email, identityNumber, nickname, phoneNumber, qq
+	email, identityNumber, nickname,
+	phoneNumber, qq, username, prizeGroup, memberType
 }) {
 	return request(`${API.updateUserInfo}/?access_token=${accessToken}`, {
 		method: 'put',
@@ -118,10 +142,13 @@ export function putUserInfo({ accessToken }, {
 			'content-type': 'application/json'
 		},
 		body: JSON.stringify({
+			memberType,
+			prizeGroup: _.toNumber(prizeGroup.value),
 			email: email.value,
 			identityNumber: `${identityNumber.value}`,
 			nickname: nickname.value,
 			phoneNumber: phoneNumber.value,
+			username: username.value,
 			qq: qq.value
 		})
 	});
@@ -180,6 +207,23 @@ export function putBankTransferConfirmation({ userModel, formModel, transferMode
 		})
 	});
 }
+export function putAffCode({ userModel, formModel, payload }) {
+	const { accessToken } = userModel;
+	const { id } = payload;
+	const { affCodeStatus, affCodeUrl, prizeGroup, memberType } = formModel;
+	return request(`${API.affCode}/${id}?access_token=${accessToken}`, {
+		method: 'put',
+		headers: {
+			'content-type': 'application/json'
+		},
+		body: JSON.stringify({
+			memberType,
+			status: affCodeStatus.value,
+			url: affCodeUrl.value,
+			prizeGroup: _.toNumber(prizeGroup.value),
+		})
+	});
+}
 export function deleteBankAccount({
 	selectedBankCardId, accessToken
 }) {
@@ -189,6 +233,33 @@ export function deleteBankAccount({
 			'content-type': 'application/json'
 		}
 	});
+}
+export function deleteAffCode({ accessToken }, { id }) {
+	return request(`${API.affCode}/${id}?access_token=${accessToken}`, {
+		method: 'delete',
+		headers: {
+			'content-type': 'application/json'
+		}
+	});
+}
+export function postAffUrl({ randomCode }) {
+	return request(API.affCodeUrl, {
+		method: "post",
+    headers: {
+      'content-type': "application/json"
+    },
+    body: JSON.stringify({ randomCode })
+	});
+}
+export function postEntries({ order, accessToken }) {
+  const body = JSON.stringify(order);
+  return request(`${API.ordercap}?access_token=${accessToken}`, {
+    method: "post",
+    headers: {
+      'content-type': "application/json"
+    },
+    body
+  });
 }
 export function postBankInfo({ accessToken }, {
   bankAccountName, bankAddress, bankCardNo,
@@ -206,6 +277,53 @@ export function postBankInfo({ accessToken }, {
 			bankCode: bankCode.value,
 			bankName: bankName.value,
 			remarks: remarks.value
+		})
+	});
+}
+export function getMyCashFlow(
+	{ accessToken }, { endTime, start, startTime, moneyOperationTypes, pageSize, targetUser }
+) {
+	const body = {
+		startTime: `${startTime.format('YYYY-MM-DD')} 00:00:00`,
+		endTime: `${endTime.format('YYYY-MM-DD')} 23:59:59`,
+		start,
+		pageSize: pageSize * 10,
+		moneyOperationTypes,
+	};
+	if (targetUser) {
+		body.username = targetUser;
+	}
+	return request(`${API.userBalance}?access_token=${accessToken}`, {
+		method: 'post',
+		headers: {
+			'content-type': 'application/json'
+		},
+		body: JSON.stringify(body)
+	});
+}
+export function getAffCodesList({ accessToken }, { pageSize }) {
+	return request(`${API.affCodeList}?access_token=${accessToken}`, {
+		method: 'post',
+		headers: {
+			'content-type': 'application/json'
+		},
+		body: JSON.stringify({
+			pageSize: pageSize * 10
+		})
+	});
+}
+export function getMyCommission({ accessToken, status }, { start, startTime, endTime, pageSize }) {
+	return request(`${API.myCommissions}/?access_token=${accessToken}`, {
+		method: 'post',
+		headers: {
+			'content-type': 'application/json'
+		},
+		body: JSON.stringify({
+			status: status === 'ALL' ? '' : status,
+			start,
+			pageSize: pageSize * 10,
+			startTime: `${startTime.format('YYYY-MM-DD')} 00:00:00`,
+			endTime: `${endTime.format('YYYY-MM-DD')} 23:59:59`
 		})
 	});
 }
@@ -232,27 +350,26 @@ export function postPreRegisterGuest() {
 		},
 	});
 }
-export function postGuestRegistration({ username, password }) {
+export function postRegistration({ username, password, varifyCode, webUniqueCode, affCode }) {
+	let registerAPI = API.webRegister;
+	if (username.value && username.value.indexOf('Guest') > -1) {
+		registerAPI = API.webRegisterGuest;
+	}
 	return awaitHash(username.value, password.value).then((hash) => {
-		console.debug(hash);
-		return request(API.registerGuest, {
+		return request(registerAPI, {
 			method: 'post',
 			headers: {
 				'content-type': 'application/json'
 			},
-			body: JSON.stringify({ hash, password: password.value, username: username.value })
-		});
-	});
-}
-export function postRegistration({ username, password }) {
-	return awaitHash(username.value, password.value).then((hash) => {
-		console.debug(hash);
-		return request(API.register, {
-			method: 'post',
-			headers: {
-				'content-type': 'application/json'
-			},
-			body: JSON.stringify({ hash, password: password.value, username: username.value })
+			body: JSON.stringify({
+				affCode: affCode.value,
+				hash,
+				password: password.value,
+				username: username.value,
+				validateCode: varifyCode.value,
+				wap: true,
+				webUniqueCode
+			})
 		});
 	});
 }
@@ -294,6 +411,44 @@ export function postWithdrawalRequest({ userModel, transferModel, formModel }) {
 			charge: charge.value,
 			userBankId,
 			withDrawCode: securityPassword.value
+		})
+	});
+}
+export function postUser({ accessToken }, {
+	username, password, memberType, prizeGroup,
+	realName, phoneNumber, qq, email
+}) {
+	return request(`${API.createDownline}?access_token=${accessToken}`, {
+		method: 'post',
+		headers: {
+			'content-type': 'application/json'
+		},
+		body: JSON.stringify({
+			username: username.value,
+			password: password.value,
+			memberType,
+			prizeGroup: _.toNumber(prizeGroup.value),
+			realName: realName.value,
+			phoneNumber: phoneNumber.value,
+			qq: qq.value,
+			email: email.value
+		})
+	});
+}
+export function postAffCode({ accessToken }, {
+	affCode, affCodeStatus, prizeGroup, memberType
+}) {
+	return request(`${API.affCode}?access_token=${accessToken}`, {
+		method: 'post',
+		headers: {
+			'content-type': 'application/json'
+		},
+		body: JSON.stringify({
+			affCode: affCode.value,
+			memberType,
+			status: affCodeStatus.value,
+			registerUrl: '106.web.com',
+			prizeGroup: _.toNumber(prizeGroup.value),
 		})
 	});
 }
